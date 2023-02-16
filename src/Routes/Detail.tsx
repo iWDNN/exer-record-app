@@ -1,5 +1,8 @@
 import React from "react";
+import styled from "styled-components";
+
+const Container = styled.div``;
 
 export default function Detail() {
-  return <div>Detail</div>;
+  return <Container></Container>;
 }
