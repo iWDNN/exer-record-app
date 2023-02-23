@@ -2,9 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { createGlobalStyle } from "styled-components";
-import App from "./App";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { RouterProvider } from "react-router-dom";
+import router from "./Router";
 
 const GlobalStyle = createGlobalStyle`
 html,
@@ -111,6 +112,7 @@ section {
 }
 body {
   line-height: 1;
+  background-color: #eee;
 }
 ol,
 ul {
@@ -143,12 +145,14 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <GlobalStyle />
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+  <>
+    <React.StrictMode>
+      <GlobalStyle />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </React.StrictMode>
+  </>
 );
 
 reportWebVitals();
