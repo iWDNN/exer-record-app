@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import uuid from "react-uuid";
 import styled from "styled-components";
+import { addLog } from "../features/exercise/exerLogsSlice";
 import {
+  complete,
   decrease,
   increase,
   reset,
@@ -109,7 +111,6 @@ function RestTime() {
 export default function PlayExer() {
   const curExer = useAppSelector((state) => state.timer.record);
   const time = useAppSelector((state) => state.timer.time);
-  const data = useAppSelector((state) => state.timer);
   const dispatch = useAppDispatch();
 
   const [playTg, setPlayTg] = useState(false);
@@ -125,9 +126,13 @@ export default function PlayExer() {
     dispatch(setClear());
   };
   const onClickComplete = () => {
+    if (curExer.playSetCount >= curExer.setCount) {
+      dispatch(complete());
+    }
+    console.log(curExer);
+    dispatch(addLog(curExer));
     dispatch(reset());
   };
-  console.log(data);
   return (
     <Container>
       <TimerDisplay>
@@ -173,7 +178,7 @@ export default function PlayExer() {
         </ul>
       </TimerRecord>
       <button onClick={onClickComplete}>
-        {curExer.playSetCount === curExer.setCount ? "완료" : "포기"}
+        {curExer.playSetCount >= curExer.setCount ? "완료" : "포기"}
       </button>
     </Container>
   );

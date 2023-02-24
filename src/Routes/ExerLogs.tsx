@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { useAppSelector } from "../hooks";
 const ExerLog = styled.section`
   ul {
     li {
       display: flex;
       margin: 1em 0;
-      h4 {
+      span {
         margin: 0 10px;
         span:first-child {
           margin-right: 10px;
@@ -14,55 +15,35 @@ const ExerLog = styled.section`
     }
   }
 `;
+// id: string;
+//   date: string;
+//   name: string;
+//   allTime: number;
+//   detailTimes: number[];
+//   playSetCount: number;
+//   setCount: number;
+//   setRestTerm: number;
+//   exerCount: number;
+//   cmp: boolean;
 export default function ExerLogs() {
+  const { records } = useAppSelector((state) => state.exerLogs);
+  console.log(records);
   return (
     <ExerLog>
       <h2>운동 기록</h2>
       <ul>
-        <li>
-          <h4>
-            <span>운동 이름</span>
-            <span>팔굽혀펴기</span>
-          </h4>
-          <h4>
-            <span>횟수</span>
-            <span>15</span>
-          </h4>
-          <h4>
-            <span>세트 횟수</span>
-            <span>3</span>
-          </h4>
-          <h4>
-            <span>완료 날짜</span>
-            <span>2013/05/13</span>
-          </h4>
-          <h4>
-            <span>걸린시간</span>
-            <span>189초</span>
-          </h4>
-        </li>
-        <li>
-          <h4>
-            <span>운동 이름</span>
-            <span>팔굽혀펴기</span>
-          </h4>
-          <h4>
-            <span>횟수</span>
-            <span>15</span>
-          </h4>
-          <h4>
-            <span>세트 횟수</span>
-            <span>3</span>
-          </h4>
-          <h4>
-            <span>완료 날짜</span>
-            <span>2013/05/13</span>
-          </h4>
-          <h4>
-            <span>걸린시간</span>
-            <span>189초</span>
-          </h4>
-        </li>
+        {records?.map(
+          ({ id, date, name, exerCount, playSetCount, setCount }) => (
+            <li key={id}>
+              <span>{date}</span>
+              <span>{name}</span>
+              <span>{exerCount}</span>
+              <span>
+                {playSetCount}/{setCount}
+              </span>
+            </li>
+          )
+        )}
       </ul>
     </ExerLog>
   );

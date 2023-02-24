@@ -1,25 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface IRecord {
+  id: string;
+  date: string;
+  name: string;
+  allTime: number;
+  detailTimes: number[];
+  playSetCount: number;
+  setCount: number;
+  setRestTerm: number;
+  exerCount: number;
+  cmp: boolean;
+}
+
 export interface TimeRecordState {
   time: number;
-
-  record: {
-    id: string;
-    date: string;
-    name: string;
-    allTime: number;
-    detailTimes: number[];
-    playSetCount: number;
-    setCount: number;
-    setRestTerm: number;
-    exerCount: number;
-    cmp: boolean;
-  };
+  record: IRecord;
 }
 
 const initialState: TimeRecordState = {
   time: 0,
-
   record: {
     id: "",
     date: "",
@@ -60,11 +60,25 @@ export const timerSlice = createSlice({
       state.record.playSetCount += 1;
       state.time = 0;
     },
+    complete: (state) => {
+      state.record.allTime = state.record.detailTimes.reduce(
+        (a, b) => a + b,
+        0
+      );
+      state.record.cmp = true;
+    },
     reset: () => initialState,
   },
 });
 
-export const { startSet, setTime, increase, decrease, setClear, reset } =
-  timerSlice.actions;
+export const {
+  startSet,
+  setTime,
+  increase,
+  decrease,
+  setClear,
+  reset,
+  complete,
+} = timerSlice.actions;
 
 export default timerSlice.reducer;
