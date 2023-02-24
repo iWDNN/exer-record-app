@@ -1,24 +1,27 @@
-import React, { useState } from "react";
-import { Link, Outlet, useParams } from "react-router-dom";
+import React from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { addToggle } from "./features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import AddExer from "./Routes/AddExer";
 
 const Container = styled.div`
-  width: 420px;
+  width: 480px;
   min-height: 100vh;
   margin: 0 auto;
   background-color: #fff;
   header {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 25% 50% 25%;
     * {
       padding: 0.5em 0;
       place-self: center;
     }
     ul {
+      display: flex;
+      align-items: center;
       li {
+        margin: 0 10px;
         color: #383838;
         font-size: 0.9em;
         font-weight: 600;
@@ -54,7 +57,7 @@ const Container = styled.div`
   }
 `;
 const Page = styled.div`
-  width: 420px;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -63,7 +66,7 @@ const Page = styled.div`
 `;
 
 function Root() {
-  const { exerId } = useParams();
+  const { pathname } = useLocation();
   const addTg = useAppSelector((state) => state.toggle.addToggle);
   const dispatch = useAppDispatch();
   return (
@@ -74,8 +77,14 @@ function Root() {
           <Link to="/">
             <li>운동리스트</li>
           </Link>
+          <Link to="/logs">
+            <li>운동기록</li>
+          </Link>
+          <Link to="/logs">
+            <li>운동분석</li>
+          </Link>
         </ul>
-        {exerId ? (
+        {pathname.includes("play") ? (
           <Link to="/">
             <i className="fa-solid fa-reply"></i>
           </Link>

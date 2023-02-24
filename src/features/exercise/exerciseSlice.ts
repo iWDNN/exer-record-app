@@ -3,8 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface ExerciseState {
   id: string;
   exerName: string;
-  exerCount: string;
-  exerSetCount: string;
+  exerCount: number;
+  exerSetCount: number;
+  exerSetRestTerm: number;
 }
 
 const initialState: ExerciseState[] = [];

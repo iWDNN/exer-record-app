@@ -7,8 +7,9 @@ import { addToggle } from "../features/toggle/toggleSlice";
 import { useAppDispatch } from "../hooks";
 interface IFormData {
   exerName: string;
-  maxCount: string;
-  setCount: string;
+  maxCount: number;
+  setCount: number;
+  setRestTerm: number;
 }
 
 const AddSection = styled.section`
@@ -45,14 +46,12 @@ export default function AddExer() {
     const result: ExerciseState = {
       id: uuid(),
       exerName: data.exerName,
-      exerCount: String(Math.floor(+data.maxCount / 2 + +data.maxCount / 4)),
+      exerCount: Math.floor(+data.maxCount / 2 + +data.maxCount / 4),
       exerSetCount: data.setCount,
+      exerSetRestTerm: data.setRestTerm,
     };
     dispatch(add(result));
     dispatch(addToggle(false));
-    setValue("exerName", "");
-    setValue("maxCount", "");
-    setValue("setCount", "");
   };
   return (
     <AddSection>
@@ -63,11 +62,15 @@ export default function AddExer() {
         />
         <input
           {...register("maxCount")}
-          placeholder="운동 가능 최대 횟수를 입력해주세요"
+          placeholder="가능한 최대 횟수를 입력해주세요"
         />
         <input
           {...register("setCount")}
           placeholder="세트 횟수를 입력해주세요"
+        />
+        <input
+          {...register("setRestTerm")}
+          placeholder="세트 당 휴식시간을 입력해주세요 (초)"
         />
         <button>추가</button>
       </form>

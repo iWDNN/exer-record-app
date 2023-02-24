@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ExerciseState } from "../features/exercise/exerciseSlice";
-import { useAppSelector } from "../hooks";
+import { reset, startSet } from "../features/timer/timerSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
 
 const ListSection = styled.section`
   width: 100%;
@@ -55,6 +56,19 @@ const Exercise = styled.li<{ isActive?: boolean }>`
 `;
 export default function Home() {
   const exercise = useAppSelector((state) => state.exercise);
+  const dispatch = useAppDispatch();
+  const onClickSubmit = (exer: ExerciseState) => {
+    const result = {
+      id: exer.id,
+      name: exer.exerName,
+      exerCount: exer.exerCount,
+      setCount: +exer.exerSetCount,
+      setRestTerm: exer.exerSetRestTerm,
+      date: String(new Date().toLocaleString()),
+    };
+    dispatch(reset());
+    dispatch(startSet(result));
+  };
   return (
     <ListSection>
       <ul>
@@ -64,15 +78,20 @@ export default function Home() {
               <h2>{exer.exerName}</h2>
               <ul>
                 <li>
+                  <span>{exer.exerSetCount}</span> set
+                </li>
+                <li>
                   <span>{exer.exerCount}</span> count
                 </li>
                 <li>
-                  <span>{exer.exerSetCount}</span> set
+                  <span>{exer.exerSetRestTerm}s</span> rest
                 </li>
               </ul>
             </div>
             <div>
-              <Link to={`/play/${exer.id}`}>시작</Link>
+              <Link to={`/play`} onClick={() => onClickSubmit(exer)}>
+                시작
+              </Link>
             </div>
           </Exercise>
         ))}

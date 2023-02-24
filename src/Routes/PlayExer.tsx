@@ -1,13 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import uuid from "react-uuid";
 import styled from "styled-components";
-import { useAppSelector } from "../hooks";
+import {
+  decrease,
+  increase,
+  reset,
+  setClear,
+} from "../features/timer/timerSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { countdown, formatTime } from "../utils";
+
+interface IRestTime {
+  time: number;
+}
 
 const Container = styled.div`
   width: 235px;
   margin: 1em 0;
+  section {
+    margin: 1em 0;
+  }
+  button {
+    width: 100%;
+    padding: 0.5em 1em;
+    border: 1px solid #181818;
+    background-color: transparent;
+    cursor: pointer;
+  }
 `;
-const TimerDisplay = styled.div`
+const TimerDisplay = styled.section`
   h2 {
     text-align: center;
     font-size: 1.2em;
@@ -15,8 +36,11 @@ const TimerDisplay = styled.div`
   p {
     display: block;
     margin: 10px 0;
-    font-size: 84px;
-    font-weight: 300;
+    text-align: center;
+    span {
+      font-size: 84px;
+      font-weight: 300;
+    }
   }
   ul {
     li {
@@ -28,63 +52,129 @@ const TimerDisplay = styled.div`
   }
 `;
 
-const TimerControl = styled.div`
+const TimerControl = styled.section`
   & > div:first-child {
     display: flex;
     justify-content: space-evenly;
     button {
       width: 50%;
-      padding: 0.5em 1em;
-      border: 1px solid #181818;
-      background-color: transparent;
     }
   }
 `;
-function Time(props: any) {
+
+const TimerRecord = styled.section`
+  h3 {
+    font-weight: 600;
+  }
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+`;
+
+function PlayTime() {
+  const time = useAppSelector((state) => state.timer.time);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    console.log("mounted");
+    const interval = setInterval(() => {
+      // console.log("(Mounted)PlayTime interval ing...");
+      dispatch(increase());
+    }, 1000);
     return () => {
-      console.log("unmounted");
+      // console.log("(unMounted)PlayTime intervel end");
+      clearInterval(interval);
     };
   }, []);
-  return <p>00:01</p>;
-}
-export default function PlayExer() {
-  const { exerId } = useParams();
-  const [curExer] = useAppSelector((state) =>
-    state.exercise.filter((exer) => exer.id === exerId)
-  );
-  const [toggle, setToggle] = useState(false);
 
-  // 임시 코드
-  const navigate = useNavigate();
+  return <span>{formatTime(time)}</span>;
+}
+
+function RestTime() {
+  const restTime = useAppSelector((state) => state.timer.record.setRestTerm);
+  const [count, setCounter] = useState(restTime);
+  const asyncAwait = async () => {
+    await countdown(restTime, setCounter);
+  };
   useEffect(() => {
-    if (!curExer) {
-      navigate("/");
-    }
+    asyncAwait();
   }, []);
+
+  return <span>{formatTime(count)}</span>;
+}
+
+export default function PlayExer() {
+  const curExer = useAppSelector((state) => state.timer.record);
+  const time = useAppSelector((state) => state.timer.time);
+  const data = useAppSelector((state) => state.timer);
+  const dispatch = useAppDispatch();
+
+  const [playTg, setPlayTg] = useState(false);
+  const [restTg, setRestTg] = useState(false);
+
+  const onClickStart = () => {
+    setPlayTg((prev) => !prev);
+    setRestTg(false);
+  };
+  const onClickSetClear = () => {
+    setPlayTg(false);
+    setRestTg(true);
+    dispatch(setClear());
+  };
+  const onClickComplete = () => {
+    dispatch(reset());
+  };
+  console.log(data);
   return (
     <Container>
       <TimerDisplay>
-        <h2>{curExer.exerName}</h2>
-        {toggle ? <Time /> : <p>00:00</p>}
+        <h2>{curExer.name}</h2>
+        <p>
+          {playTg || restTg ? (
+            <>
+              {playTg && <PlayTime />}
+              {restTg && <RestTime />}
+            </>
+          ) : (
+            <span>{formatTime(time)}</span>
+          )}
+        </p>
         <ul>
           <li>
-            <span>count</span>
+            <span>횟수</span>
             <span>{curExer.exerCount}</span>
           </li>
           <li>
-            <span>set</span>
-            <span>0/{curExer.exerSetCount}</span>
+            <span>세트</span>
+            <span>
+              {curExer.playSetCount} / {curExer.setCount}
+            </span>
           </li>
         </ul>
       </TimerDisplay>
       <TimerControl>
         <div>
-          <button onClick={() => setToggle((prev) => !prev)}>시작</button>
-          <button>완료</button>
+          <button onClick={onClickStart}>{playTg ? "일시정지" : "시작"}</button>
+          <button onClick={onClickSetClear}>세트 완료</button>
         </div>
       </TimerControl>
+      <TimerRecord>
+        <h3>세트 당 걸린 시간</h3>
+        <ul>
+          {curExer.detailTimes.map((setTime, i) => (
+            <li key={uuid()}>
+              <span>{i + 1} set</span>
+              <span>{setTime}s</span>
+            </li>
+          ))}
+        </ul>
+      </TimerRecord>
+      <button onClick={onClickComplete}>
+        {curExer.playSetCount === curExer.setCount ? "완료" : "포기"}
+      </button>
     </Container>
   );
 }

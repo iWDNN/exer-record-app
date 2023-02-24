@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
+import { theme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
 html,
@@ -146,12 +147,14 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <>
-    <React.StrictMode>
-      <GlobalStyle />
-      <Provider store={store}>
+    {/* <React.StrictMode> */}
+    <GlobalStyle />
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
         <RouterProvider router={router} />
-      </Provider>
-    </React.StrictMode>
+      </ThemeProvider>
+    </Provider>
+    {/* </React.StrictMode> */}
   </>
 );
 
