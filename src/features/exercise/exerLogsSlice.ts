@@ -1,20 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { EXER_LOGS } from "../../ls-type";
 import { IRecord } from "../timer/timerSlice";
 
-export interface ExerLogsState {
-  records: IRecord[];
+if (!localStorage.getItem(EXER_LOGS)) {
+  localStorage.setItem(EXER_LOGS, JSON.stringify([]));
 }
-
-const initialState: ExerLogsState = {
-  records: [],
-};
+const initialState: IRecord[] = JSON.parse(
+  localStorage.getItem(EXER_LOGS) as any
+);
 
 export const exerLogsSlice = createSlice({
   name: "exerLogs",
   initialState,
   reducers: {
     addLog: (state, action) => {
-      state.records?.push(action.payload);
+      state.push(action.payload);
     },
   },
 });

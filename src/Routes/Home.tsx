@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ExerciseState } from "../features/exercise/exerciseSlice";
+import { del, ExerciseState } from "../features/exercise/exerciseSlice";
 import { reset, startSet } from "../features/timer/timerSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { EXERCISES } from "../ls-type";
 
 const ListSection = styled.section`
   width: 100%;
@@ -18,6 +19,7 @@ const ListSection = styled.section`
 `;
 
 const Exercise = styled.li<{ isActive?: boolean }>`
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,7 +27,7 @@ const Exercise = styled.li<{ isActive?: boolean }>`
   border-radius: 7px;
   margin-bottom: 1em;
   padding: 1em;
-  margin: 0 1em;
+  margin: 0.5em 1em;
   div:first-child {
     h2 {
       font-size: 24px;
@@ -37,20 +39,27 @@ const Exercise = styled.li<{ isActive?: boolean }>`
       display: flex;
       opacity: 0.8;
       li {
-        font-size: 0.9em;
+        font-size: 0.8em;
         margin-right: 10px;
         span {
-          font-size: 1.1em;
+          font-size: 1.3em;
           font-weight: 600;
         }
       }
     }
   }
+
   div:last-child {
+    display: flex;
+    flex-direction: column;
     a {
       padding: 1em;
       border: 1px solid #eee;
       border-radius: 7px;
+    }
+    button {
+      border: none;
+      cursor: pointer;
     }
   }
 `;
@@ -69,6 +78,14 @@ export default function Home() {
     dispatch(reset());
     dispatch(startSet(result));
   };
+  const onClickDelete = (id: string) => {
+    const exercisesLS: ExerciseState[] = JSON.parse(
+      localStorage.getItem("exercises") as any
+    );
+    const result = exercisesLS.filter((exercise) => exercise.id !== id);
+    localStorage.setItem(EXERCISES, JSON.stringify(result));
+    dispatch(del(id));
+  };
   return (
     <ListSection>
       <ul>
@@ -78,13 +95,13 @@ export default function Home() {
               <h2>{exer.exerName}</h2>
               <ul>
                 <li>
-                  <span>{exer.exerSetCount}</span> set
+                  <span>{exer.exerSetCount}</span> 세트
                 </li>
                 <li>
-                  <span>{exer.exerCount}</span> count
+                  <span>{exer.exerCount}</span> 횟수
                 </li>
                 <li>
-                  <span>{exer.exerSetRestTerm}s</span> rest
+                  <span>{exer.exerSetRestTerm}</span>초씩 휴식
                 </li>
               </ul>
             </div>
@@ -92,6 +109,13 @@ export default function Home() {
               <Link to={`/play`} onClick={() => onClickSubmit(exer)}>
                 시작
               </Link>
+              <button
+                onClick={() => {
+                  onClickDelete(exer.id);
+                }}
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
             </div>
           </Exercise>
         ))}

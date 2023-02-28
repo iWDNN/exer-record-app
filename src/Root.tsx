@@ -69,6 +69,7 @@ function Root() {
   const { pathname } = useLocation();
   const addTg = useAppSelector((state) => state.toggle.addToggle);
   const dispatch = useAppDispatch();
+
   return (
     <Container>
       <header>
@@ -80,7 +81,7 @@ function Root() {
           <Link to="/logs">
             <li>운동기록</li>
           </Link>
-          <Link to="/logs">
+          <Link to="/labs">
             <li>운동분석</li>
           </Link>
         </ul>

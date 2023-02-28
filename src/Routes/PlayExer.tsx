@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import uuid from "react-uuid";
 import styled from "styled-components";
 import { addLog } from "../features/exercise/exerLogsSlice";
 import {
-  complete,
-  decrease,
   increase,
-  reset,
+  IRecord,
   setClear,
+  setIsRest,
 } from "../features/timer/timerSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { EXER_LOGS } from "../ls-type";
 import { countdown, formatTime } from "../utils";
-
-interface IRestTime {
-  time: number;
-}
 
 const Container = styled.div`
   width: 235px;
@@ -97,9 +94,13 @@ function PlayTime() {
 
 function RestTime() {
   const restTime = useAppSelector((state) => state.timer.record.setRestTerm);
+  const dispatch = useAppDispatch();
+
   const [count, setCounter] = useState(restTime);
   const asyncAwait = async () => {
-    await countdown(restTime, setCounter);
+    await countdown(restTime, setCounter).then(() => {
+      dispatch(setIsRest(false));
+    });
   };
   useEffect(() => {
     asyncAwait();
@@ -110,8 +111,11 @@ function RestTime() {
 
 export default function PlayExer() {
   const curExer = useAppSelector((state) => state.timer.record);
-  const time = useAppSelector((state) => state.timer.time);
+  const { time, isRest } = useAppSelector((state) => state.timer);
+
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   const [playTg, setPlayTg] = useState(false);
   const [restTg, setRestTg] = useState(false);
@@ -119,24 +123,28 @@ export default function PlayExer() {
   const onClickStart = () => {
     setPlayTg((prev) => !prev);
     setRestTg(false);
+    dispatch(setIsRest(false));
   };
   const onClickSetClear = () => {
     setPlayTg(false);
     setRestTg(true);
+    dispatch(setIsRest(true));
     dispatch(setClear());
   };
   const onClickComplete = () => {
-    if (curExer.playSetCount >= curExer.setCount) {
-      dispatch(complete());
-    }
-    console.log(curExer);
+    const exercisesLS: IRecord[] = JSON.parse(
+      localStorage.getItem(EXER_LOGS) as any
+    );
+    localStorage.setItem(EXER_LOGS, JSON.stringify([...exercisesLS, curExer]));
     dispatch(addLog(curExer));
-    dispatch(reset());
+    setPlayTg(false);
+    setRestTg(false);
+    navigate("/");
   };
   return (
     <Container>
       <TimerDisplay>
-        <h2>{curExer.name}</h2>
+        <h2>{isRest ? "휴식 중..." : curExer.name}</h2>
         <p>
           {playTg || restTg ? (
             <>

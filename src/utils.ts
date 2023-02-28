@@ -8,9 +8,9 @@ export const countdown = (sec: number, useStateSetFunc: Function) => {
   let count = sec;
   return new Promise((resolve) => {
     const interval = setInterval(async () => {
-      console.log("count interval start");
+      // console.log("count interval start");
       if (count === 0) {
-        console.log("count interval end");
+        // console.log("count interval end");
         resolve("");
         clearInterval(interval);
       }

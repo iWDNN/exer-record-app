@@ -3,6 +3,7 @@ import Root from "./Root";
 import ExerLogs from "./Routes/ExerLogs";
 import PlayExer from "./Routes/PlayExer";
 import Home from "./Routes/Home";
+import ExerLabs from "./Routes/ExerLabs";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "logs",
         element: <ExerLogs />,
+      },
+      {
+        path: "labs",
+        element: <ExerLabs />,
       },
     ],
   },
