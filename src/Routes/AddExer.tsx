@@ -6,6 +6,7 @@ import { add, ExerciseState } from "../features/exercise/exerciseSlice";
 import { addToggle } from "../features/toggle/toggleSlice";
 import { useAppDispatch } from "../hooks";
 import { EXERCISES } from "../ls-type";
+import { motion } from "framer-motion";
 interface IFormData {
   exerName: string;
   maxCount: number;
@@ -13,7 +14,7 @@ interface IFormData {
   setRestTerm: number;
 }
 
-const AddSection = styled.section`
+const AddSection = styled(motion.section)`
   padding: 1em;
   form {
     width: 270px;
@@ -74,7 +75,12 @@ export default function AddExer() {
     dispatch(addToggle(false));
   };
   return (
-    <AddSection>
+    <AddSection
+      transition={{ duration: 0.1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputEl>
           <Input

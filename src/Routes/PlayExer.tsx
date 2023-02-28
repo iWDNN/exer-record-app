@@ -14,7 +14,9 @@ import { EXER_LOGS } from "../ls-type";
 import { countdown, formatTime } from "../utils";
 
 const Container = styled.div`
-  width: 235px;
+  width: 340px;
+  display: flex;
+  justify-content: center;
   margin: 1em 0;
   section {
     margin: 1em 0;
@@ -26,6 +28,14 @@ const Container = styled.div`
     background-color: transparent;
     cursor: pointer;
   }
+`;
+const TimerCt = styled.div<{ isComplete?: boolean }>`
+  width: 100%;
+  padding: 20px;
+  border-radius: 7px;
+  border: ${(props) =>
+    props.isComplete ? "4px solid" + props.theme.green : "none"};
+  transition: 0.2s all ease-in-out;
 `;
 const TimerDisplay = styled.section`
   h2 {
@@ -50,6 +60,7 @@ const TimerDisplay = styled.section`
     }
   }
 `;
+const Time = styled.p<{ isRest: boolean }>``;
 
 const TimerControl = styled.section`
   & > div:first-child {
@@ -143,51 +154,57 @@ export default function PlayExer() {
   };
   return (
     <Container>
-      <TimerDisplay>
-        <h2>{isRest ? "휴식 중..." : curExer.name}</h2>
-        <p>
-          {playTg || restTg ? (
-            <>
-              {playTg && <PlayTime />}
-              {restTg && <RestTime />}
-            </>
-          ) : (
-            <span>{formatTime(time)}</span>
-          )}
-        </p>
-        <ul>
-          <li>
-            <span>횟수</span>
-            <span>{curExer.exerCount}</span>
-          </li>
-          <li>
-            <span>세트</span>
-            <span>
-              {curExer.playSetCount} / {curExer.setCount}
-            </span>
-          </li>
-        </ul>
-      </TimerDisplay>
-      <TimerControl>
-        <div>
-          <button onClick={onClickStart}>{playTg ? "일시정지" : "시작"}</button>
-          <button onClick={onClickSetClear}>세트 완료</button>
-        </div>
-      </TimerControl>
-      <TimerRecord>
-        <h3>세트 당 걸린 시간</h3>
-        <ul>
-          {curExer.detailTimes.map((setTime, i) => (
-            <li key={uuid()}>
-              <span>{i + 1} set</span>
-              <span>{setTime}s</span>
+      <TimerCt isComplete={curExer.playSetCount >= curExer.setCount}>
+        <TimerDisplay>
+          <h2>{isRest ? "휴식 중..." : curExer.name}</h2>
+          <Time isRest={isRest}>
+            {playTg || restTg ? (
+              <>
+                {playTg && <PlayTime />}
+                {restTg && <RestTime />}
+              </>
+            ) : (
+              <span>{formatTime(time)}</span>
+            )}
+          </Time>
+          <ul>
+            <li>
+              <span>횟수</span>
+              <span>{curExer.exerCount}</span>
             </li>
-          ))}
-        </ul>
-      </TimerRecord>
-      <button onClick={onClickComplete}>
-        {curExer.playSetCount >= curExer.setCount ? "완료" : "포기"}
-      </button>
+            <li>
+              <span>세트</span>
+              <span>
+                {curExer.playSetCount} / {curExer.setCount}
+              </span>
+            </li>
+          </ul>
+        </TimerDisplay>
+        <TimerControl>
+          <div>
+            <button onClick={onClickStart}>
+              {playTg ? "일시정지" : "시작"}
+            </button>
+            <button onClick={onClickSetClear}>세트 완료</button>
+          </div>
+        </TimerControl>
+        <TimerRecord>
+          <h3>세트 당 걸린 시간</h3>
+          <ul>
+            {curExer.detailTimes.map((setTime, i) => (
+              <li key={uuid()}>
+                <span>{i + 1} set</span>
+                <span>{setTime}s</span>
+              </li>
+            ))}
+          </ul>
+        </TimerRecord>
+        {curExer.playSetCount > 0 && (
+          <button onClick={onClickComplete}>
+            {curExer.playSetCount >= curExer.setCount ? "완료" : "포기"}
+          </button>
+        )}
+      </TimerCt>
     </Container>
   );
 }

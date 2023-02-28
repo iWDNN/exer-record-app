@@ -16,9 +16,10 @@ export const exerLogsSlice = createSlice({
     addLog: (state, action) => {
       state.push(action.payload);
     },
+    resetLog: () => [],
   },
 });
 
-export const { addLog } = exerLogsSlice.actions;
+export const { addLog, resetLog } = exerLogsSlice.actions;
 
 export default exerLogsSlice.reducer;

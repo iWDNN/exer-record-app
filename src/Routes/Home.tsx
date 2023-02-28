@@ -52,12 +52,17 @@ const Exercise = styled.li<{ isActive?: boolean }>`
   div:last-child {
     display: flex;
     flex-direction: column;
-    a {
+    a:first-child {
       padding: 1em;
       border: 1px solid #eee;
       border-radius: 7px;
+      transition: 0.2s all ease-in-out;
+      &:hover {
+        background-color: #eee;
+      }
     }
     button {
+      margin-top: 5px;
       border: none;
       cursor: pointer;
     }
@@ -114,7 +119,7 @@ export default function Home() {
                   onClickDelete(exer.id);
                 }}
               >
-                <i className="fa-solid fa-xmark"></i>
+                삭제
               </button>
             </div>
           </Exercise>
