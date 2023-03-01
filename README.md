@@ -1,33 +1,37 @@
 # Health Care App
 
-1-1. 집에서 홈 트레이닝을 가끔 하는 편인데, 집에서 하는 운동을 편하게 기록하면서 생각한 원하는 기능들을 가진 앱을 만들어보고 싶고 redux-toolkit의 사용법을 익혀보고자 제작한 미니 프로젝트입니다.
+1. 제작 동기
 
-2-1. 제작기간 : 2023/02/10 ~
+- 집에서 홈 트레이닝을 가끔 하는 편인데, 집에서 하는 운동을 편하게 기록하면서 생각한 원하는 기능들을 가진 앱을 만들어보고 싶고 redux-toolkit의 사용법을 익혀보고자 제작한 미니 프로젝트입니다.
 
-3-1. 주요 기능
+2. 제작기간 : 2023/02/10 ~
 
-간단한 사용방법
-운동 중 타이머 기능
-운동 로그 확인
-운동 데이터 분석
+3. 주요 기능
 
-3-2. Tech Stack
+- 간단한 사용방법
+- 운동 중 타이머 기능
+- 운동 로그 확인
+- 운동 데이터 분석
 
-react-typescript,
-styled-components,
-react-redux, redux-toolkit,
-react-hook-form,
-framer-motion,
-react-charts,
+4. Tech Stack
 
-3-3. 역할 : 개인 프로젝트
+- react-typescript,
+- styled-components,
+- react-redux, redux-toolkit,
+- react-hook-form,
+- framer-motion,
+- react-charts,
 
-3-4. 현재 미구현 기능
+5. 역할 : 개인 프로젝트
 
-데이터 분석 차트
-운동 수정
+6. 현재 미구현 기능
 
-3-5 . 배운점
+- 데이터 분석 차트
+- 운동 수정
 
-react hook form 라이브러리의 간단한 유효성 검사
-redux의 기본개념, redux-toolkit 기초 사용방법
+7. 배운점
+
+- react hook form 라이브러리의 간단한 유효성 검사
+- redux의 기본개념, redux-toolkit 기초 사용방법
+
+<!-- 8. 보완점 -->
