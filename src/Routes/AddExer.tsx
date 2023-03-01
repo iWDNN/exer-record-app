@@ -4,7 +4,7 @@ import uuid from "react-uuid";
 import styled from "styled-components";
 import { add, ExerciseState } from "../features/exercise/exerciseSlice";
 import { addToggle } from "../features/toggle/toggleSlice";
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { EXERCISES } from "../ls-type";
 import { motion } from "framer-motion";
 interface IFormData {
@@ -53,12 +53,13 @@ const Input = styled.input<{ isError?: boolean }>`
 `;
 
 export default function AddExer() {
+  const exercises = useAppSelector((state) => state.exercise);
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormData>();
-  const dispatch = useAppDispatch();
   const onSubmit = (data: IFormData) => {
     const result: ExerciseState = {
       id: uuid(),
@@ -84,7 +85,13 @@ export default function AddExer() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputEl>
           <Input
-            {...register("exerName", { required: "운동 이름을 입력해주세요" })}
+            {...register("exerName", {
+              required: "운동 이름을 입력해주세요",
+              validate: (value) =>
+                exercises.find((exercise) => exercise.exerName === value)
+                  ? "운동 이름이 중복됩니다."
+                  : true,
+            })}
             placeholder="운동 이름"
           />
           <span>{errors.exerName?.message}</span>

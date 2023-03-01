@@ -73,7 +73,6 @@ export default function Home() {
   const dispatch = useAppDispatch();
   const onClickSubmit = (exer: ExerciseState) => {
     const result = {
-      id: exer.id,
       name: exer.exerName,
       exerCount: exer.exerCount,
       setCount: +exer.exerSetCount,

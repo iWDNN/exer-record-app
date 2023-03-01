@@ -76,21 +76,19 @@ export default function ExerLogs() {
           <span>횟수</span>
           <span>세트 수</span>
         </li>
-        {records?.map(
-          ({ id, date, name, cmp, exerCount, playSetCount, setCount }) => (
-            <ExerLogItem key={id}>
-              <span>{date}</span>
-              <span>{name}</span>
-              <span>{exerCount}</span>
-              <span>
-                {playSetCount}/{setCount}
-              </span>
-              <IsCmp isCmp={cmp}>
-                <i className="fa-solid fa-check"></i>
-              </IsCmp>
-            </ExerLogItem>
-          )
-        )}
+        {records?.map((record) => (
+          <ExerLogItem key={record.id}>
+            <span>{record.date}</span>
+            <span>{record.name}</span>
+            <span>{record.exerCount}</span>
+            <span>
+              {record.playSetCount}/{record.setCount}
+            </span>
+            <IsCmp isCmp={record.cmp}>
+              <i className="fa-solid fa-check"></i>
+            </IsCmp>
+          </ExerLogItem>
+        ))}
       </ul>
     </ExerLogList>
   );

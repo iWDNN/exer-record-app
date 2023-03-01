@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import uuid from "react-uuid";
 
 export interface IRecord {
   id: string;
@@ -42,7 +43,7 @@ export const timerSlice = createSlice({
       state.isRest = action.payload;
     },
     startSet: (state, { payload }) => {
-      state.record.id = payload.id;
+      state.record.id = uuid();
       state.record.name = payload.name;
       state.record.exerCount = payload.exerCount;
       state.record.setCount = payload.setCount;

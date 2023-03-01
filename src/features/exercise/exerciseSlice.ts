@@ -17,7 +17,7 @@ const initialState: ExerciseState[] = JSON.parse(
   localStorage.getItem(EXERCISES) as any
 );
 
-console.log("initialState :", initialState);
+// console.log("initialState :", initialState);
 
 export const exerciseSlice = createSlice({
   name: "exercise",
