@@ -152,6 +152,11 @@ export default function PlayExer() {
     setRestTg(false);
     navigate("/");
   };
+  useEffect(() => {
+    if (curExer.id === "") {
+      navigate("/");
+    }
+  }, []);
   return (
     <Container>
       <TimerCt isComplete={curExer.playSetCount >= curExer.setCount}>

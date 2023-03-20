@@ -30,6 +30,8 @@ const Exercise = styled.li<{ isActive?: boolean }>`
   margin: 0.5em 1em;
   div:first-child {
     h2 {
+      display: flex;
+      align-items: center;
       font-size: 24px;
       font-weight: 600;
       letter-spacing: 2px;
@@ -68,7 +70,7 @@ const Exercise = styled.li<{ isActive?: boolean }>`
     }
   }
 `;
-export default function Home() {
+export default function ExerList() {
   const exercise = useAppSelector((state) => state.exercise);
   const dispatch = useAppDispatch();
   const onClickSubmit = (exer: ExerciseState) => {

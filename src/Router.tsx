@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Root from "./Root";
 import ExerLogs from "./Routes/ExerLogs";
 import PlayExer from "./Routes/PlayExer";
-import Home from "./Routes/Home";
+import ExerList from "./Routes/ExerList";
 import ExerLabs from "./Routes/ExerLabs";
 
 const router = createBrowserRouter([
@@ -12,7 +12,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <ExerList />,
       },
       {
         path: "play",

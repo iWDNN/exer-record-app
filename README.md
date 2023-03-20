@@ -34,4 +34,6 @@
 - react hook form 라이브러리의 간단한 유효성 검사
 - redux의 기본개념, redux-toolkit 기초 사용방법
 
-<!-- 8. 보완점 -->
+8. 보완점
+
+- 서버가 아닌 localStorage로 데이터를 저장중

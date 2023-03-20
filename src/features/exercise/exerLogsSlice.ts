@@ -8,7 +8,6 @@ if (!localStorage.getItem(EXER_LOGS)) {
 const initialState: IRecord[] = JSON.parse(
   localStorage.getItem(EXER_LOGS) as any
 );
-console.log("initialState :", initialState);
 
 export const exerLogsSlice = createSlice({
   name: "exerLogs",
