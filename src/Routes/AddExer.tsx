@@ -2,8 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import uuid from "react-uuid";
 import styled from "styled-components";
-import { add, ExerciseState } from "../features/exercise/exerciseSlice";
-import { addToggle } from "../features/toggle/toggleSlice";
+import { exerAdd, ExerciseState } from "../features/exercise/exerciseSlice";
+import { addToggleSwitch } from "../features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { EXERCISES } from "../ls-type";
 import { motion } from "framer-motion";
@@ -72,8 +72,8 @@ export default function AddExer() {
       localStorage.getItem(EXERCISES) as any
     );
     localStorage.setItem(EXERCISES, JSON.stringify([...exercisesLS, result]));
-    dispatch(add(result));
-    dispatch(addToggle(false));
+    dispatch(exerAdd(result));
+    dispatch(addToggleSwitch(false));
   };
   return (
     <AddSection

@@ -1,215 +1,130 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import uuid from "react-uuid";
 import styled from "styled-components";
-import { addLog } from "../features/exercise/exerLogsSlice";
-import {
-  increase,
-  IRecord,
-  setClear,
-  setIsRest,
-} from "../features/timer/timerSlice";
+import { ExerciseState } from "../features/exercise/exerciseSlice";
+import { setTime, timeIncrease } from "../features/time/timeSlice";
+import { startToggleSwitch } from "../features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { EXER_LOGS } from "../ls-type";
-import { countdown, formatTime } from "../utils";
+import { formatTime } from "../utils";
+
+interface IPlayExerInfo extends ExerciseState {
+  // id: string;
+  // exerName: string;
+  // exerCount: number;
+  // exerSetCount: number;
+  // exerSetRestTerm: number;
+  cmp: boolean;
+  records: number[];
+}
 
 const Container = styled.div`
-  width: 340px;
+  width: 100%;
+  margin-top: 50px;
+  * {
+    /* border: 1px solid black; */
+    padding: 5px;
+  }
+`;
+const Title = styled.h1`
+  font-size: 1.3em;
+  font-weight: 500;
+  text-align: center;
+`;
+const Time = styled.div`
+  font-size: 5em;
+  font-weight: 600;
+  padding: 10px 0;
+  text-align: center;
+`;
+const BtnCt = styled.div`
   display: flex;
   justify-content: center;
-  margin: 1em 0;
-  section {
-    margin: 1em 0;
-  }
+  align-items: center;
   button {
-    width: 100%;
     padding: 0.5em 1em;
-    border: 1px solid #181818;
     background-color: transparent;
+    border: 1px solid #121212;
     cursor: pointer;
   }
 `;
-const TimerCt = styled.div<{ isComplete?: boolean }>`
-  width: 100%;
-  padding: 20px;
-  border-radius: 7px;
-  border: ${(props) =>
-    props.isComplete ? "4px solid" + props.theme.green : "none"};
-  transition: 0.2s all ease-in-out;
-`;
-const TimerDisplay = styled.section`
+const Records = styled.ul`
+  /* padding: 1em; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
   h2 {
-    text-align: center;
-    font-size: 1.2em;
-  }
-  p {
-    display: block;
-    margin: 10px 0;
-    text-align: center;
-    span {
-      font-size: 84px;
-      font-weight: 300;
-    }
-  }
-  ul {
-    li {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #eee;
-      margin-bottom: 10px;
-    }
-  }
-`;
-const Time = styled.p<{ isRest: boolean }>``;
-
-const TimerControl = styled.section`
-  & > div:first-child {
-    display: flex;
-    justify-content: space-evenly;
-    button {
-      width: 50%;
-    }
-  }
-`;
-
-const TimerRecord = styled.section`
-  h3 {
+    font-size: 1.1em;
     font-weight: 600;
   }
-  li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0;
-    border-bottom: 1px solid #eee;
-  }
+`;
+const Record = styled.li`
+  border-bottom: 1.5px solid #eee;
+  border-radius: 2px;
 `;
 
 function PlayTime() {
-  const time = useAppSelector((state) => state.timer.time);
   const dispatch = useAppDispatch();
+  const { time } = useAppSelector((state) => state.time);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // console.log("(Mounted)PlayTime interval ing...");
-      dispatch(increase());
+      dispatch(timeIncrease());
     }, 1000);
     return () => {
-      // console.log("(unMounted)PlayTime intervel end");
       clearInterval(interval);
     };
   }, []);
-
-  return <span>{formatTime(time)}</span>;
-}
-
-function RestTime() {
-  const restTime = useAppSelector((state) => state.timer.record.setRestTerm);
-  const dispatch = useAppDispatch();
-
-  const [count, setCounter] = useState(restTime);
-  const asyncAwait = async () => {
-    await countdown(restTime, setCounter).then(() => {
-      dispatch(setIsRest(false));
-    });
-  };
-  useEffect(() => {
-    asyncAwait();
-  }, []);
-
-  return <span>{formatTime(count)}</span>;
+  return <>{formatTime(time)}</>;
 }
 
 export default function PlayExer() {
-  const curExer = useAppSelector((state) => state.timer.record);
-  const { time, isRest } = useAppSelector((state) => state.timer);
+  const { exerId } = useParams();
 
+  //store
   const dispatch = useAppDispatch();
+  const [exercise] = useAppSelector((state) => state.exercise).filter(
+    (exer) => exer.id === exerId
+  );
+  const { time } = useAppSelector((state) => state.time);
 
-  const navigate = useNavigate();
-
-  const [playTg, setPlayTg] = useState(false);
-  const [restTg, setRestTg] = useState(false);
+  const startToggle = useAppSelector((state) => state.toggle.startToggle);
+  // component
+  const [initStart, setInitStart] = useState(false);
+  const [records, setRecords] = useState<number[]>([]);
 
   const onClickStart = () => {
-    setPlayTg((prev) => !prev);
-    setRestTg(false);
-    dispatch(setIsRest(false));
+    dispatch(startToggleSwitch("toggle"));
+    setInitStart(true);
   };
-  const onClickSetClear = () => {
-    setPlayTg(false);
-    setRestTg(true);
-    dispatch(setIsRest(true));
-    dispatch(setClear());
+  const onClickSetCmp = () => {
+    dispatch(startToggleSwitch(false));
+    setInitStart(false);
+    setRecords((prev) => [...prev, time]); // records useState훅 변수에 기록
+    dispatch(setTime(0)); // 리덕스 현재 시간 초기화
   };
-  const onClickComplete = () => {
-    const exercisesLS: IRecord[] = JSON.parse(
-      localStorage.getItem(EXER_LOGS) as any
-    );
-    localStorage.setItem(EXER_LOGS, JSON.stringify([...exercisesLS, curExer]));
-    dispatch(addLog(curExer));
-    setPlayTg(false);
-    setRestTg(false);
-    navigate("/");
-  };
-  useEffect(() => {
-    if (curExer.id === "") {
-      navigate("/");
-    }
-  }, []);
+
   return (
     <Container>
-      <TimerCt isComplete={curExer.playSetCount >= curExer.setCount}>
-        <TimerDisplay>
-          <h2>{isRest ? "휴식 중..." : curExer.name}</h2>
-          <Time isRest={isRest}>
-            {playTg || restTg ? (
-              <>
-                {playTg && <PlayTime />}
-                {restTg && <RestTime />}
-              </>
-            ) : (
-              <span>{formatTime(time)}</span>
-            )}
-          </Time>
-          <ul>
-            <li>
-              <span>횟수</span>
-              <span>{curExer.exerCount}</span>
-            </li>
-            <li>
-              <span>세트</span>
-              <span>
-                {curExer.playSetCount} / {curExer.setCount}
-              </span>
-            </li>
-          </ul>
-        </TimerDisplay>
-        <TimerControl>
-          <div>
-            <button onClick={onClickStart}>
-              {playTg ? "일시정지" : "시작"}
-            </button>
-            <button onClick={onClickSetClear}>세트 완료</button>
-          </div>
-        </TimerControl>
-        <TimerRecord>
-          <h3>세트 당 걸린 시간</h3>
-          <ul>
-            {curExer.detailTimes.map((setTime, i) => (
-              <li key={uuid()}>
-                <span>{i + 1} set</span>
-                <span>{setTime}s</span>
-              </li>
-            ))}
-          </ul>
-        </TimerRecord>
-        {curExer.playSetCount > 0 && (
-          <button onClick={onClickComplete}>
-            {curExer.playSetCount >= curExer.setCount ? "완료" : "포기"}
-          </button>
-        )}
-      </TimerCt>
+      <Title>{exercise.exerName}</Title>
+      <Time>{startToggle ? <PlayTime /> : formatTime(time)}</Time>
+      <BtnCt>
+        <button onClick={onClickStart}>
+          {!initStart ? "시작" : startToggle ? "일시정지" : "재시작"}
+        </button>
+        <button onClick={onClickSetCmp}>세트완료</button>
+      </BtnCt>
+      <Records>
+        <h2>기록</h2>
+        {records.map((record, i) => (
+          <Record key={uuid()}>
+            <span>{i + 1} set</span>
+            <span>{formatTime(record)}</span>
+          </Record>
+        ))}
+      </Records>
     </Container>
   );
 }

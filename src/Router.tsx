@@ -15,7 +15,7 @@ const router = createBrowserRouter([
         element: <ExerList />,
       },
       {
-        path: "play",
+        path: "play/:exerId",
         element: <PlayExer />,
       },
       {

@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { del, ExerciseState } from "../features/exercise/exerciseSlice";
-import { reset, startSet } from "../features/timer/timerSlice";
+import { exerDel, ExerciseState } from "../features/exercise/exerciseSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { EXERCISES } from "../ls-type";
 
@@ -73,24 +72,14 @@ const Exercise = styled.li<{ isActive?: boolean }>`
 export default function ExerList() {
   const exercise = useAppSelector((state) => state.exercise);
   const dispatch = useAppDispatch();
-  const onClickSubmit = (exer: ExerciseState) => {
-    const result = {
-      name: exer.exerName,
-      exerCount: exer.exerCount,
-      setCount: +exer.exerSetCount,
-      setRestTerm: exer.exerSetRestTerm,
-      date: String(new Date().toLocaleString()),
-    };
-    dispatch(reset());
-    dispatch(startSet(result));
-  };
+  const onClickSubmit = (exer: ExerciseState) => {};
   const onClickDelete = (id: string) => {
     const exercisesLS: ExerciseState[] = JSON.parse(
       localStorage.getItem("exercises") as any
     );
     const result = exercisesLS.filter((exercise) => exercise.id !== id);
     localStorage.setItem(EXERCISES, JSON.stringify(result));
-    dispatch(del(id));
+    dispatch(exerDel(id));
   };
   return (
     <ListSection>
@@ -112,9 +101,7 @@ export default function ExerList() {
               </ul>
             </div>
             <div>
-              <Link to={`/play`} onClick={() => onClickSubmit(exer)}>
-                시작
-              </Link>
+              <Link to={`/play/${exer.id}`}>시작</Link>
               <button
                 onClick={() => {
                   onClickDelete(exer.id);

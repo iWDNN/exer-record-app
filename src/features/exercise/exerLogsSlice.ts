@@ -1,6 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { EXER_LOGS } from "../../ls-type";
-import { IRecord } from "../timer/timerSlice";
+
+export interface IRecord {
+  id: string;
+  date: string;
+  name: string;
+  detailTimes: number[];
+  playSetCount: number;
+  setCount: number;
+  setRestTerm: number;
+  exerCount: number;
+  cmp: boolean;
+}
 
 if (!localStorage.getItem(EXER_LOGS)) {
   localStorage.setItem(EXER_LOGS, JSON.stringify([]));

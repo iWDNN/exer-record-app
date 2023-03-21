@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { addToggle } from "./features/toggle/toggleSlice";
+import { addToggleSwitch } from "./features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import AddExer from "./Routes/AddExer";
 import { AnimatePresence } from "framer-motion";
@@ -87,7 +87,7 @@ function Root() {
           </LinkEl>
         </ul>
         {pathname === "/" ? (
-          <button onClick={() => dispatch(addToggle("toggle"))}>
+          <button onClick={() => dispatch(addToggleSwitch("toggle"))}>
             <i className="fa-solid fa-plus"></i>
           </button>
         ) : pathname.includes("play") ? (

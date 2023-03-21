@@ -23,14 +23,14 @@ export const exerciseSlice = createSlice({
   name: "exercise",
   initialState,
   reducers: {
-    add: (state, action) => {
+    exerAdd: (state, action) => {
       state.push(action.payload);
     },
-    del: (state, action) =>
+    exerDel: (state, action) =>
       (state = state.filter((exercise) => exercise.id !== action.payload)),
   },
 });
 
-export const { add, del } = exerciseSlice.actions;
+export const { exerAdd, exerDel } = exerciseSlice.actions;
 
 export default exerciseSlice.reducer;

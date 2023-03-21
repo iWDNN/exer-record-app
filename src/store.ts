@@ -1,15 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import exerciseSlice from "./features/exercise/exerciseSlice";
 import exerLogsSlice from "./features/exercise/exerLogsSlice";
-import timerSlice from "./features/timer/timerSlice";
+import timeSlice from "./features/time/timeSlice";
 import toggleSlice from "./features/toggle/toggleSlice";
 
 export const store = configureStore({
   reducer: {
     exercise: exerciseSlice,
     exerLogs: exerLogsSlice,
-    timer: timerSlice,
     toggle: toggleSlice,
+    time: timeSlice,
   },
 });
 
