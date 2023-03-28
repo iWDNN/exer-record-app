@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import uuid from "react-uuid";
 import styled from "styled-components";
-import { ExerciseState } from "../features/exercise/exerciseSlice";
+import { addLog, IRecord } from "../features/exercise/exerLogsSlice";
 import { setTime, timeIncrease } from "../features/time/timeSlice";
-import { startToggleSwitch } from "../features/toggle/toggleSlice";
+import {
+  restToggleSwitch,
+  startToggleSwitch,
+} from "../features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { formatTime } from "../utils";
+import { countdown, formatTime } from "../utils";
 
-interface IPlayExerInfo extends ExerciseState {
-  // id: string;
-  // exerName: string;
-  // exerCount: number;
-  // exerSetCount: number;
-  // exerSetRestTerm: number;
-  cmp: boolean;
-  records: number[];
+interface IRestTime {
+  restTime: number;
 }
 
 const Container = styled.div`
@@ -39,13 +36,23 @@ const Time = styled.div`
 `;
 const BtnCt = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  button {
-    padding: 0.5em 1em;
-    background-color: transparent;
-    border: 1px solid #121212;
-    cursor: pointer;
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      padding: 0.5em 1em;
+      background-color: transparent;
+      border: 1px solid #121212;
+      cursor: pointer;
+    }
+  }
+  div:first-child {
+  }
+  div:last-child {
   }
 `;
 const Records = styled.ul`
@@ -80,9 +87,23 @@ function PlayTime() {
   return <>{formatTime(time)}</>;
 }
 
+function RestTime({ restTime }: IRestTime) {
+  const [time, setTime] = useState(restTime);
+  const dispatch = useAppDispatch();
+  const asyncAwait = async () => {
+    await countdown(restTime, setTime);
+    dispatch(restToggleSwitch(false));
+    dispatch(startToggleSwitch(true));
+  };
+  useEffect(() => {
+    asyncAwait();
+  }, []);
+  return <>{formatTime(time)}</>;
+}
+
 export default function PlayExer() {
   const { exerId } = useParams();
-
+  const navigate = useNavigate();
   //store
   const dispatch = useAppDispatch();
   const [exercise] = useAppSelector((state) => state.exercise).filter(
@@ -91,30 +112,93 @@ export default function PlayExer() {
   const { time } = useAppSelector((state) => state.time);
 
   const startToggle = useAppSelector((state) => state.toggle.startToggle);
+  const restToggle = useAppSelector((state) => state.toggle.restToggle);
+
   // component
   const [initStart, setInitStart] = useState(false);
+  const [cmp, setCmp] = useState(false);
+  // const [end, setEnd] = useState(false);
   const [records, setRecords] = useState<number[]>([]);
-
+  //event
   const onClickStart = () => {
     dispatch(startToggleSwitch("toggle"));
     setInitStart(true);
   };
-  const onClickSetCmp = () => {
-    dispatch(startToggleSwitch(false));
-    setInitStart(false);
-    setRecords((prev) => [...prev, time]); // records useState훅 변수에 기록
-    dispatch(setTime(0)); // 리덕스 현재 시간 초기화
+
+  const onClickEnd = () => {
+    dispatch(restToggleSwitch(false));
+    const result: IRecord = {
+      id: uuid(),
+      date: new Date().toLocaleDateString(),
+      name: exercise.exerName,
+      detailTimes: records,
+      playSetCount: records.length,
+      setCount: exercise.exerSetCount,
+      setRestTerm: exercise.exerSetRestTerm,
+      exerCount: exercise.exerCount,
+      cmp: records.length >= +exercise.exerSetCount,
+    };
+    dispatch(addLog(result));
   };
+
+  const onClickSetCmp = async () => {
+    setRecords((prev) => [...prev, time]);
+    dispatch(setTime(0)); // 리덕스 현재 시간 초기화
+    dispatch(startToggleSwitch(false));
+  };
+
+  useEffect(() => {
+    dispatch(startToggleSwitch(false));
+    dispatch(restToggleSwitch(false));
+  }, []);
+
+  useEffect(() => {
+    if (records.length === +exercise.exerSetCount) {
+      setCmp(true);
+      onClickEnd();
+    } else if (records.length > 0) {
+      dispatch(restToggleSwitch(true));
+    }
+  }, [records]);
 
   return (
     <Container>
+      {cmp ? "완료" : "아님"}
       <Title>{exercise.exerName}</Title>
-      <Time>{startToggle ? <PlayTime /> : formatTime(time)}</Time>
+      <Time>
+        {restToggle ? (
+          <RestTime restTime={+exercise.exerSetRestTerm} />
+        ) : startToggle ? (
+          <PlayTime />
+        ) : (
+          formatTime(time)
+        )}
+      </Time>
+      <div>
+        {records.length}/{exercise.exerSetCount}
+      </div>
       <BtnCt>
-        <button onClick={onClickStart}>
-          {!initStart ? "시작" : startToggle ? "일시정지" : "재시작"}
-        </button>
-        <button onClick={onClickSetCmp}>세트완료</button>
+        {!cmp && (
+          <>
+            <div>
+              <button onClick={onClickStart}>
+                {restToggle
+                  ? "휴식중"
+                  : !initStart
+                  ? "시작"
+                  : startToggle
+                  ? "일시정지"
+                  : "재시작"}
+              </button>
+              {restToggle ? null : (
+                <button onClick={onClickSetCmp}>세트완료</button>
+              )}
+            </div>
+            <div>
+              <button onClick={onClickEnd}>끝내기</button>
+            </div>
+          </>
+        )}
       </BtnCt>
       <Records>
         <h2>기록</h2>

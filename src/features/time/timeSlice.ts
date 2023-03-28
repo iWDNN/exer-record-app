@@ -2,9 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface TimeState {
   time: number;
+  cmp: boolean;
 }
 const initialState: TimeState = {
   time: 0,
+  cmp: false,
 };
 
 export const timeSlice = createSlice({
@@ -17,9 +19,12 @@ export const timeSlice = createSlice({
     timeIncrease: (state) => {
       state.time = state.time + 1;
     },
+    timeDecrease: (state) => {
+      state.time = state.time - 1;
+    },
   },
 });
 
-export const { setTime, timeIncrease } = timeSlice.actions;
+export const { setTime, timeIncrease, timeDecrease } = timeSlice.actions;
 
 export default timeSlice.reducer;
