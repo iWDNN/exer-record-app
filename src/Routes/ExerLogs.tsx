@@ -1,5 +1,4 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { resetLog } from "../features/exercise/exerLogsSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -47,7 +46,7 @@ const ExerLogItem = styled.li`
 `;
 
 const IsCmp = styled.div<{ isCmp: boolean }>`
-  color: ${(props) => (props.isCmp ? props.theme.green : props.theme.red)};
+  color: ${(props) => (props.isCmp ? props.theme.blue : props.theme.red)};
 `;
 // id: string;
 //   date: string;

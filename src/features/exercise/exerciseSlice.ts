@@ -23,14 +23,15 @@ export const exerciseSlice = createSlice({
   name: "exercise",
   initialState,
   reducers: {
+    setExer: (state, action) => action.payload,
     exerAdd: (state, action) => {
       state.push(action.payload);
     },
     exerDel: (state, action) =>
-      (state = state.filter((exercise) => exercise.id !== action.payload)),
+      state.filter((exercise) => exercise.id !== action.payload),
   },
 });
 
-export const { exerAdd, exerDel } = exerciseSlice.actions;
+export const { setExer, exerAdd, exerDel } = exerciseSlice.actions;
 
 export default exerciseSlice.reducer;

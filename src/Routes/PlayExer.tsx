@@ -33,6 +33,19 @@ const Time = styled.div`
   font-weight: 600;
   padding: 10px 0;
   text-align: center;
+  p {
+    font-size: 20px;
+    span {
+      display: block;
+    }
+  }
+`;
+const StateMessage = styled.span<{ curState?: string }>`
+  color: ${(props) => {
+    if (props.curState === "운동중") return props.theme.red;
+    else if (props.curState === "휴식중") return props.theme.green;
+    else if (props.curState === "운동끝") return props.theme.blue;
+  }};
 `;
 const BtnCt = styled.div`
   display: flex;
@@ -125,7 +138,7 @@ export default function PlayExer() {
     setInitStart(true);
   };
 
-  const onClickEnd = () => {
+  const onSubmitLog = () => {
     dispatch(restToggleSwitch(false));
     const result: IRecord = {
       id: uuid(),
@@ -140,11 +153,26 @@ export default function PlayExer() {
     };
     dispatch(addLog(result));
   };
+  const onClickEnd = () => {
+    onSubmitLog();
+    navigate("/");
+  };
 
   const onClickSetCmp = async () => {
     setRecords((prev) => [...prev, time]);
     dispatch(setTime(0)); // 리덕스 현재 시간 초기화
     dispatch(startToggleSwitch(false));
+  };
+  const watchState = () => {
+    if (initStart) {
+      if (restToggle) {
+        return "휴식중";
+      } else if (startToggle) {
+        return "운동중";
+      } else if (!restToggle && !startToggle) {
+        return "운동끝";
+      }
+    }
   };
 
   useEffect(() => {
@@ -155,7 +183,7 @@ export default function PlayExer() {
   useEffect(() => {
     if (records.length === +exercise.exerSetCount) {
       setCmp(true);
-      onClickEnd();
+      onSubmitLog();
     } else if (records.length > 0) {
       dispatch(restToggleSwitch(true));
     }
@@ -163,7 +191,6 @@ export default function PlayExer() {
 
   return (
     <Container>
-      {cmp ? "완료" : "아님"}
       <Title>{exercise.exerName}</Title>
       <Time>
         {restToggle ? (
@@ -173,10 +200,13 @@ export default function PlayExer() {
         ) : (
           formatTime(time)
         )}
+        <p>
+          <span>
+            {records.length}/{exercise.exerSetCount}
+          </span>
+          <StateMessage curState={watchState()}>{watchState()}</StateMessage>
+        </p>
       </Time>
-      <div>
-        {records.length}/{exercise.exerSetCount}
-      </div>
       <BtnCt>
         {!cmp && (
           <>

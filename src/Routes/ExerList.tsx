@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { exerDel, ExerciseState } from "../features/exercise/exerciseSlice";
+import {
+  exerDel,
+  ExerciseState,
+  setExer,
+} from "../features/exercise/exerciseSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { EXERCISES } from "../ls-type";
+
+interface IForm {
+  exerSetCount: number;
+  exerCount: number;
+  exerSetRestTerm: number;
+}
 
 const ListSection = styled.section`
   width: 100%;
@@ -69,10 +80,48 @@ const Exercise = styled.li<{ isActive?: boolean }>`
     }
   }
 `;
+const BtnGrp = styled.div``;
+const PopUpCt = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  div {
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+  }
+`;
 export default function ExerList() {
   const exercise = useAppSelector((state) => state.exercise);
   const dispatch = useAppDispatch();
-  const onClickSubmit = (exer: ExerciseState) => {};
+
+  const [popUp, setPopUp] = useState(false);
+  const [popUpData, setPopUpData] = useState<ExerciseState>();
+
+  const { register, handleSubmit } = useForm<ExerciseState>();
+
+  const onSubmit = (data: IForm) => {
+    const result: ExerciseState = {
+      id: popUpData!.id,
+      exerName: popUpData!.exerName,
+      exerCount: data.exerCount,
+      exerSetCount: data.exerSetCount,
+      exerSetRestTerm: data.exerSetRestTerm,
+    };
+    const targetIndex = exercise.findIndex((exer) => exer.id === popUpData!.id);
+    const prev = exercise.slice(0, targetIndex);
+    const others = exercise.slice(targetIndex + 1);
+    const changeExer = [...prev, result, ...others];
+    localStorage.setItem(EXERCISES, JSON.stringify(changeExer));
+    dispatch(setExer(changeExer));
+    setPopUp(false);
+  };
+
   const onClickDelete = (id: string) => {
     const exercisesLS: ExerciseState[] = JSON.parse(
       localStorage.getItem("exercises") as any
@@ -82,37 +131,94 @@ export default function ExerList() {
     dispatch(exerDel(id));
   };
   return (
-    <ListSection>
-      <ul>
-        {exercise.map((exer: ExerciseState) => (
-          <Exercise key={exer.id}>
-            <div>
-              <h2>{exer.exerName}</h2>
+    <>
+      <ListSection>
+        <ul>
+          {exercise.map((exer: ExerciseState) => (
+            <Exercise key={exer.id}>
+              <div>
+                <h2>{exer.exerName}</h2>
+                <ul>
+                  <li>
+                    <span>{exer.exerSetCount}</span> 세트
+                  </li>
+                  <li>
+                    <span>{exer.exerCount}</span> 횟수
+                  </li>
+                  <li>
+                    <span>{exer.exerSetRestTerm}</span>초씩 휴식
+                  </li>
+                </ul>
+              </div>
+              <BtnGrp>
+                <Link to={`/play/${exer.id}`}>시작</Link>
+                <button
+                  onClick={() => {
+                    onClickDelete(exer.id);
+                  }}
+                >
+                  삭제
+                </button>
+                <button
+                  onClick={() => {
+                    setPopUp((prev) => !prev);
+                    setPopUpData(exer);
+                  }}
+                >
+                  수정
+                </button>
+              </BtnGrp>
+            </Exercise>
+          ))}
+        </ul>
+      </ListSection>
+      {popUp && (
+        <PopUpCt>
+          <div
+          // onBlur={() => {
+          //   setPopUp((prev) => !prev);
+          // }}
+          >
+            <h1>{popUpData?.exerName}</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <input
+                type="number"
+                {...register("exerSetCount", {
+                  valueAsNumber: true,
+                  value: popUpData?.exerSetCount,
+                })}
+                placeholder="set"
+              />
+              <input
+                type="number"
+                {...register("exerCount", {
+                  valueAsNumber: true,
+                  value: popUpData?.exerCount,
+                })}
+                placeholder="count"
+              />
+              <input
+                type="number"
+                {...register("exerSetRestTerm", {
+                  valueAsNumber: true,
+                  value: popUpData?.exerSetRestTerm,
+                })}
+                placeholder="rest"
+              />
               <ul>
-                <li>
-                  <span>{exer.exerSetCount}</span> 세트
-                </li>
-                <li>
-                  <span>{exer.exerCount}</span> 횟수
-                </li>
-                <li>
-                  <span>{exer.exerSetRestTerm}</span>초씩 휴식
-                </li>
+                <button>수정</button>
+                <button
+                  onClick={() => {
+                    setPopUp(false);
+                  }}
+                >
+                  취소
+                </button>
               </ul>
-            </div>
-            <div>
-              <Link to={`/play/${exer.id}`}>시작</Link>
-              <button
-                onClick={() => {
-                  onClickDelete(exer.id);
-                }}
-              >
-                삭제
-              </button>
-            </div>
-          </Exercise>
-        ))}
-      </ul>
-    </ListSection>
+            </form>
+          </div>
+        </PopUpCt>
+      )}
+    </>
   );
 }
