@@ -1,6 +1,7 @@
 import React from "react";
 import uuid from "react-uuid";
 import styled from "styled-components";
+import ReactApexChart from "react-apexcharts";
 import { useAppSelector } from "../hooks";
 
 const Container = styled.div`
@@ -13,13 +14,22 @@ const Container = styled.div`
 const Item = styled.li`
   width: 90%;
   padding: 1em;
-  border: 1px solid black;
   border-radius: 15px;
   list-style-type: none;
   margin: 1em 0;
+  ul {
+    li {
+      font-size: 0.9em;
+      margin: 10px 0;
+      h2 {
+        font-weight: 600;
+      }
+    }
+  }
 `;
 const Title = styled.h1`
   font-size: 1.2em;
+  font-weight: 700;
   padding: 0.5em 0;
 `;
 
@@ -28,8 +38,6 @@ export default function ExerLabs() {
     state.exercise.map((exer) => exer.exerName)
   );
   const exerLogs = useAppSelector((state) => state.exerLogs);
-  console.log(exerNames);
-  console.log(exerLogs);
   return (
     <Container>
       {exerNames &&
@@ -37,9 +45,30 @@ export default function ExerLabs() {
           <Item key={uuid()}>
             <Title>{name}</Title>
             <ul>
-              <li>횟수 증가 그래프</li>
-              <li>걸린 시간 그래프</li>
-              <li>세트 수 그래프</li>
+              <li>
+                <h2>횟수 증가 그래프</h2>
+                {/* <ReactApexChart
+                  type="line"
+                  options={{
+                    chart: {
+                      height: 500,
+                      width: 500,
+                    },
+                  }}
+                  series={[
+                    {
+                      name: "hello",
+                      data: [4, 1, 5, 6, 4, 6],
+                    },
+                  ]}
+                /> */}
+              </li>
+              <li>
+                <h2>걸린 시간 그래프</h2>
+              </li>
+              <li>
+                <h2>세트 수 그래프</h2>
+              </li>
             </ul>
           </Item>
         ))}

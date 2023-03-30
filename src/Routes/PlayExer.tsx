@@ -9,6 +9,7 @@ import {
   startToggleSwitch,
 } from "../features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { EXER_LOGS } from "../ls-type";
 import { countdown, formatTime } from "../utils";
 
 interface IRestTime {
@@ -130,8 +131,8 @@ export default function PlayExer() {
   // component
   const [initStart, setInitStart] = useState(false);
   const [cmp, setCmp] = useState(false);
-  // const [end, setEnd] = useState(false);
   const [records, setRecords] = useState<number[]>([]);
+
   //event
   const onClickStart = () => {
     dispatch(startToggleSwitch("toggle"));
@@ -151,6 +152,10 @@ export default function PlayExer() {
       exerCount: exercise.exerCount,
       cmp: records.length >= +exercise.exerSetCount,
     };
+    const exerLogsLS: IRecord[] = JSON.parse(
+      localStorage.getItem(EXER_LOGS) as any
+    );
+    localStorage.setItem(EXER_LOGS, JSON.stringify([...exerLogsLS, result]));
     dispatch(addLog(result));
   };
   const onClickEnd = () => {
