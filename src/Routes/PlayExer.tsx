@@ -143,7 +143,7 @@ export default function PlayExer() {
     dispatch(restToggleSwitch(false));
     const result: IRecord = {
       id: uuid(),
-      date: new Date().toLocaleDateString(),
+      date: new Date().toString(),
       name: exercise.exerName,
       detailTimes: records,
       playSetCount: records.length,

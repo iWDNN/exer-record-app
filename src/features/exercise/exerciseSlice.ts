@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { EXERCISES } from "../../ls-type";
 
-export interface ExerciseState {
+export interface IExerciseState {
   id: string;
   exerName: string;
   exerCount: number;
@@ -13,7 +13,7 @@ if (!localStorage.getItem(EXERCISES)) {
   localStorage.setItem(EXERCISES, JSON.stringify([]));
 }
 
-const initialState: ExerciseState[] = JSON.parse(
+const initialState: IExerciseState[] = JSON.parse(
   localStorage.getItem(EXERCISES) as any
 );
 

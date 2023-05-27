@@ -15,49 +15,91 @@ const ExerLogList = styled.section`
     margin: 1em 0;
     cursor: pointer;
   }
-  ul {
-    width: 90%;
-    li {
-      display: grid;
-      grid-template-columns: 40% 25% 15% 15% 5%;
-      &:first-child {
-        font-size: 0.8em;
-        span {
-          place-self: center;
-        }
-      }
+`;
+const List = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+const ListHeader = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 0.9em;
+  font-weight: 700;
+  background-color: #2a2527;
+  padding: 0.8em 2em;
+  border-bottom: 1px solid #4e494b;
+  & > * {
+    border-right: 1.5px solid #4e494b;
+    border-radius: 1px;
+    &:last-child {
+      border-right: none;
     }
   }
+  div:first-child {
+    width: 100px;
+  }
+  div:nth-child(2) {
+    flex-grow: 1;
+  }
+  div:nth-child(3) {
+    display: flex;
+    align-items: center;
+    margin: 0 1em;
+    span {
+      width: 100px;
+      display: block;
+    }
+  }
+  div:last-child {
+    width: 100px;
+    text-align: center;
+  }
 `;
-
-const ExerLogItem = styled.li`
+const ExerLogItem = styled.div`
   display: flex;
-  padding: 0.7em 0;
-  margin: 1em 0;
-  border-radius: 7px;
-  span {
-    place-self: center;
-    margin: 0 10px;
+  align-items: center;
+  padding: 0.5em 2em;
+  background-color: #2b2529;
+  font-size: 0.9em;
+  font-weight: 500;
+  &:nth-child(2n) {
+    background-color: #352f33;
+  }
+  div:first-child {
+    width: 100px;
+    text-align: center;
+  }
+  div:nth-child(2) {
+    padding-left: 0.4em;
+    flex-grow: 1;
+  }
+  div:nth-child(3) {
+    display: flex;
+    align-items: center;
     font-size: 0.9em;
-    &:first-child {
-      font-size: 0.8em;
+    margin: 0 1em;
+    span {
+      width: 100px;
+      padding-right: 0.4em;
+      display: block;
+      text-align: end;
+    }
+  }
+  div:last-child {
+    width: 100px;
+    text-align: center;
+    & > * {
+      font-size: 0.9em;
+      border: none;
     }
   }
 `;
 
 const IsCmp = styled.div<{ isCmp: boolean }>`
-  color: ${(props) => (props.isCmp ? props.theme.blue : props.theme.red)};
+  color: ${(props) => (props.isCmp ? props.theme.green : props.theme.red)};
 `;
-// id: string;
-//   date: string;
-//   name: string;
-//   allTime: number;
-//   detailTimes: number[];
-//   playSetCount: number;
-//   setCount: number;
-//   setRestTerm: number;
-//   exerCount: number;
-//   cmp: boolean;
 export default function ExerLogs() {
   const records = useAppSelector((state) => state.exerLogs);
   const dispatch = useAppDispatch();
@@ -65,30 +107,50 @@ export default function ExerLogs() {
     localStorage.setItem(EXER_LOGS, JSON.stringify([]));
     dispatch(resetLog());
   };
+  // 운동 시작 시간, 종료 시간
+  // 세트당 걸린 시간, 휴식 시간,
   return (
     <ExerLogList>
       <button onClick={onClickReset}>초기화</button>
-      <ul>
-        <li>
-          <span>날짜</span>
-          <span>이름</span>
-          <span>횟수</span>
-          <span>세트 수</span>
-        </li>
+      <List>
+        <ListHeader>
+          <div>
+            <span>날짜</span>
+          </div>
+          <div>
+            <span>운동 이름</span>
+          </div>
+          <div>
+            <span>세트</span>
+            <span>횟수</span>
+            <span>달성 횟수</span>
+          </div>
+          <div>
+            <span>완료 여부</span>
+          </div>
+        </ListHeader>
         {records?.map((record) => (
           <ExerLogItem key={record.id}>
-            <span>{record.date}</span>
-            <span>{record.name}</span>
-            <span>{record.exerCount}</span>
-            <span>
-              {record.playSetCount}/{record.setCount}
-            </span>
+            <div>
+              <span>{record.date}</span>
+            </div>
+            <div>
+              <span>{record.name}</span>
+            </div>
+            <div>
+              <span>{record.setCount}</span>
+              <span>{record.exerCount}</span>
+              <span>
+                {record.playSetCount}/{record.setCount}
+              </span>
+            </div>
+
             <IsCmp isCmp={record.cmp}>
               <i className="fa-solid fa-check"></i>
             </IsCmp>
           </ExerLogItem>
         ))}
-      </ul>
+      </List>
     </ExerLogList>
   );
 }

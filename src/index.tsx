@@ -113,7 +113,9 @@ section {
 }
 body {
   line-height: 1;
-  background-color: #eee;
+  background-color: #3E393C;
+  color:#fff;
+  opacity: 0.95;
 }
 ol,
 ul {

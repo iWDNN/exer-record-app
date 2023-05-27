@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import uuid from "react-uuid";
 import styled from "styled-components";
-import { exerAdd, ExerciseState } from "../features/exercise/exerciseSlice";
+import { exerAdd, IExerciseState } from "../features/exercise/exerciseSlice";
 import { addToggleSwitch } from "../features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { EXERCISES } from "../ls-type";
@@ -61,14 +61,14 @@ export default function AddExer() {
     formState: { errors },
   } = useForm<IFormData>();
   const onSubmit = (data: IFormData) => {
-    const result: ExerciseState = {
+    const result: IExerciseState = {
       id: uuid(),
       exerName: data.exerName,
       exerCount: Math.floor(+data.maxCount / 2 + +data.maxCount / 4),
       exerSetCount: data.setCount,
       exerSetRestTerm: data.setRestTerm,
     };
-    const exercisesLS: ExerciseState[] = JSON.parse(
+    const exercisesLS: IExerciseState[] = JSON.parse(
       localStorage.getItem(EXERCISES) as any
     );
     localStorage.setItem(EXERCISES, JSON.stringify([...exercisesLS, result]));
