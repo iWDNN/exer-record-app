@@ -10,20 +10,21 @@ interface IExerItemProps {
 const Ct = styled.li`
   display: flex;
   align-items: center;
-  min-width: 250px;
+  min-width: 270px;
   background-color: #2b2529;
   border-radius: 10px;
   * {
   }
   & > div {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     padding: 1em;
     & > * {
     }
     & > h1 {
+      text-align: center;
       flex-shrink: 0;
       flex-grow: 1;
       font-size: 2em;
@@ -57,8 +58,7 @@ const Ct = styled.li`
     }
     & > div:nth-child(3) {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       & > * {
         display: flex;
         justify-content: center;

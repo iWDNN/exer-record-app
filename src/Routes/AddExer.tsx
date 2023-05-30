@@ -7,6 +7,7 @@ import { addToggleSwitch } from "../features/toggle/toggleSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { EXERCISES } from "../ls-type";
 import { motion } from "framer-motion";
+
 interface IFormData {
   exerName: string;
   maxCount: number;
@@ -36,6 +37,7 @@ const AddSection = styled(motion.section)`
   }
 `;
 const InputEl = styled.div`
+  display: flex;
   width: 100%;
   span {
     text-align: start;
