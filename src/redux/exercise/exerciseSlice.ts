@@ -15,6 +15,12 @@ export const exerciseSlice = createSlice({
   initialState,
   reducers: {
     setExer: (state, action: PayloadAction<IExerciseState[]>) => action.payload,
+    uptExer: (state, action: PayloadAction<IExerciseState>) => {
+      const targetIndex = state.findIndex(
+        (exer) => exer.id === action.payload.id
+      );
+      state[targetIndex] = action.payload;
+    },
     addExer: (state, action: PayloadAction<IExerciseState>) => {
       state.push(action.payload);
     },
@@ -23,6 +29,6 @@ export const exerciseSlice = createSlice({
   },
 });
 
-export const { setExer, addExer, delExer } = exerciseSlice.actions;
+export const { setExer, uptExer, addExer, delExer } = exerciseSlice.actions;
 
 export default exerciseSlice.reducer;

@@ -113,6 +113,11 @@ nav,
 section {
   display: block;
 }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 body {
   line-height: 1;
   background-color: #3E393C;
