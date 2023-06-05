@@ -1,12 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import uuid from "react-uuid";
 import styled from "styled-components";
-import { exerAdd, IExerciseState } from "../features/exercise/exerciseSlice";
-import { addToggleSwitch } from "../features/toggle/toggleSlice";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { EXERCISES } from "../ls-type";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { motion } from "framer-motion";
+import { addExer } from "../redux/exercise/exerciseSlice";
+import uuid from "react-uuid";
+import { addToggleSwitch } from "../redux/toggle/toggleSlice";
 
 interface IFormData {
   exerName: string;
@@ -52,38 +51,32 @@ const Input = styled.input<{ isError?: boolean }>`
   margin: 1px 0;
   background-color: rgba(0, 0, 0, 0.02);
   border: none;
+  color: #fff;
 `;
 
-export default function AddExer() {
+export default function AddTap() {
   const exercises = useAppSelector((state) => state.exercise);
   const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormData>();
-  const onSubmit = (data: IFormData) => {
-    const result: IExerciseState = {
-      id: uuid(),
-      exerName: data.exerName,
-      exerCount: Math.floor(+data.maxCount / 2 + +data.maxCount / 4),
-      exerSetCount: data.setCount,
-      exerSetRestTerm: data.setRestTerm,
-    };
-    const exercisesLS: IExerciseState[] = JSON.parse(
-      localStorage.getItem(EXERCISES) as any
+  const onSubmit = (formData: IFormData) => {
+    dispatch(
+      addExer({
+        id: uuid(),
+        exerName: formData.exerName,
+        exerCount: Math.floor(formData.maxCount / 3),
+        exerSetCount: formData.setCount,
+        exerSetRestTerm: formData.setRestTerm,
+      })
     );
-    localStorage.setItem(EXERCISES, JSON.stringify([...exercisesLS, result]));
-    dispatch(exerAdd(result));
     dispatch(addToggleSwitch(false));
   };
   return (
-    <AddSection
-      transition={{ duration: 0.1 }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <AddSection>
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputEl>
           <Input

@@ -10,34 +10,33 @@ interface IExerItemProps {
 
 const Ct = styled.li`
   display: flex;
+  align-items: center;
+  min-width: 270px;
   background-color: #2b2529;
   border-radius: 10px;
   * {
   }
   & > div {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: 50% 30% 20%;
-    align-items: center;
     padding: 1em;
     & > * {
     }
-    & > div:nth-child(1) {
-      h1 {
-        text-align: center;
-        flex-shrink: 0;
-        flex-grow: 1;
-        font-size: 2em;
-        font-weight: 700;
-        letter-spacing: 2px;
-      }
+    & > h1 {
+      text-align: center;
+      flex-shrink: 0;
+      flex-grow: 1;
+      font-size: 2em;
+      font-weight: 700;
+      letter-spacing: 2px;
     }
 
     & > div:nth-child(2) {
       display: flex;
-      justify-content: space-evenly;
-      align-items: center;
+      flex-direction: column;
+      justify-content: center;
       margin-top: 10px;
       & > div {
         display: flex;
@@ -60,8 +59,7 @@ const Ct = styled.li`
     }
     & > div:nth-child(3) {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-end;
       & > * {
         display: flex;
         justify-content: center;
@@ -70,7 +68,7 @@ const Ct = styled.li`
         border: none;
         width: 25px;
         height: 25px;
-        margin: 0 0.5em;
+        margin: 0.25em;
         i {
           color: #fff;
         }
@@ -96,9 +94,7 @@ export default function ExerItem({ exerData }: IExerItemProps) {
   return (
     <Ct>
       <div>
-        <div>
-          <h1>{exerData.exerName}</h1>
-        </div>
+        <h1>{exerData.exerName}</h1>
         <div>
           <div>
             <span>세트</span>

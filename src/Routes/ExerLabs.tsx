@@ -1,8 +1,7 @@
 import React from "react";
 import uuid from "react-uuid";
 import styled from "styled-components";
-import ReactApexChart from "react-apexcharts";
-import { useAppSelector } from "../hooks";
+import { useAppSelector } from "../redux/hooks";
 
 const Container = styled.div`
   width: 100%;
@@ -37,7 +36,6 @@ export default function ExerLabs() {
   const exerNames = useAppSelector((state) =>
     state.exercise.map((exer) => exer.exerName)
   );
-  const exerLogs = useAppSelector((state) => state.exerLogs);
   return (
     <Container>
       {exerNames &&

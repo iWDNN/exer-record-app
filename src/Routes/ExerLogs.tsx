@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { resetLog } from "../features/exercise/exerLogsSlice";
-import { useAppDispatch, useAppSelector } from "../hooks";
+import { resetLog } from "../redux/exercise/exerLogsSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { EXER_LOGS } from "../ls-type";
 const ExerLogList = styled.section`
   width: 100%;

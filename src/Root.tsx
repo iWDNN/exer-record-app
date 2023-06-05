@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { useAppSelector } from "./hooks";
-import AddExer from "./Routes/AddExer";
+import { useAppSelector } from "./redux/hooks";
+import AddTap from "./components/AddTap";
 import { AnimatePresence } from "framer-motion";
 import Header from "./components/Header";
 
@@ -27,7 +27,7 @@ function Root() {
     <Container>
       <Header />
       <Page>
-        <AnimatePresence>{addTg && <AddExer />}</AnimatePresence>
+        {addTg && <AddTap />}
         <Outlet />
       </Page>
     </Container>

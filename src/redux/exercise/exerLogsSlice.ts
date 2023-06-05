@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { EXER_LOGS } from "../../ls-type";
 
 export interface IRecord {
   id: string;
@@ -13,12 +12,7 @@ export interface IRecord {
   cmp: boolean;
 }
 
-if (!localStorage.getItem(EXER_LOGS)) {
-  localStorage.setItem(EXER_LOGS, JSON.stringify([]));
-}
-const initialState: IRecord[] = JSON.parse(
-  localStorage.getItem(EXER_LOGS) as any
-);
+const initialState: IRecord[] = [];
 
 export const exerLogsSlice = createSlice({
   name: "exerLogs",

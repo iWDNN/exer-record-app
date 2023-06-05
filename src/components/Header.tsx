@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { addToggleSwitch } from "../features/toggle/toggleSlice";
-import { useAppDispatch } from "../hooks";
+import { addToggleSwitch } from "../redux/toggle/toggleSlice";
+import { useAppDispatch } from "../redux/hooks";
 
 const Ct = styled.div`
   display: grid;
