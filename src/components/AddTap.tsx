@@ -15,29 +15,36 @@ interface IFormData {
 }
 
 const AddSection = styled(motion.section)`
-  padding: 1em;
+  margin: 1em;
+  background-color: #2c262a;
+  border-radius: 10px;
   form {
-    width: 270px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
 
+    align-items: center;
+    @media screen and (max-width: 1139px) {
+      flex-direction: column;
+    }
     button {
-      width: 100%;
+      width: 270px;
       padding: 1em;
-      margin-top: 10px;
       border: none;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      background-color: #4d484a;
+      color: #fff;
       cursor: pointer;
       transition: 0.2s all ease-in-out;
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-      }
     }
   }
 `;
 const InputEl = styled.div`
+  width: 270px;
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  input {
+    border-right: 1px solid #4d484a;
+  }
   span {
     text-align: start;
     color: ${(props) => props.theme.red};
@@ -52,6 +59,7 @@ const Input = styled.input<{ isError?: boolean }>`
   background-color: rgba(0, 0, 0, 0.02);
   border: none;
   color: #fff;
+  outline: none;
 `;
 
 export default function AddTap() {

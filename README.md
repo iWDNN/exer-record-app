@@ -33,7 +33,4 @@
 
 - react hook form 라이브러리의 간단한 유효성 검사
 - redux의 기본개념, redux-toolkit 기초 사용방법
-
-8. 보완점
-
-- 서버가 아닌 localStorage로 데이터를 저장중
+- useRef : https://itprogramming119.tistory.com/entry/React-useRef-%EC%82%AC%EC%9A%A9%EB%B2%95-%EB%B0%8F-%EC%98%88%EC%A0%9C

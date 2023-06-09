@@ -14,11 +14,17 @@ interface IExerItemProps {
 }
 
 const Ct = styled.li`
+  height: 110px;
   display: flex;
   flex-direction: column;
   background-color: #2b2529;
   border-radius: 10px;
+  /* border-top-left-radius: 10px;
+  border-top-right-radius: 10px; */
   box-sizing: border-box;
+  @media screen and (max-width: 1439px) {
+    height: 100%;
+  }
 `;
 
 const InfoCt = styled.div`
@@ -116,7 +122,7 @@ const UpdateCt = styled.div`
     width: 100%;
     display: grid;
     grid-template-columns: 40% 40% 20%;
-
+    align-items: center;
     & > div {
       display: flex;
 
