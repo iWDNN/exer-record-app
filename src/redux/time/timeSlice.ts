@@ -16,15 +16,9 @@ export const timeSlice = createSlice({
     setTime: (state, action) => {
       state.time = action.payload;
     },
-    timeIncrease: (state) => {
-      state.time = state.time + 1;
-    },
-    timeDecrease: (state) => {
-      state.time = state.time - 1;
-    },
   },
 });
 
-export const { setTime, timeIncrease, timeDecrease } = timeSlice.actions;
+export const { setTime } = timeSlice.actions;
 
 export default timeSlice.reducer;

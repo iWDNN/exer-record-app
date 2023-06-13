@@ -185,21 +185,17 @@ export default function ExerItem({ exerData }: IExerItemProps) {
       exerSetRestTerm: exerData.exerSetRestTerm,
     },
   });
-
-  const onValid = (formData: IExerciseState) => {
+  console.log(exerData.exerId);
+  const onSubmit = (formData: IExerciseState) => {
     dispatch(
       uptExer({
-        id: exerData.id,
+        exerId: exerData.exerId,
         exerName: formData.exerName,
         exerCount: formData.exerCount,
         exerSetCount: formData.exerSetCount,
         exerSetRestTerm: formData.exerSetRestTerm,
       })
     );
-    // setValue("exerName", "");
-    // setValue("exerCount", 0);
-    // setValue("exerSetCount", 0);
-    // setValue("exerSetRestTerm", 0);
     setToggle(false);
   };
   return (
@@ -226,7 +222,7 @@ export default function ExerItem({ exerData }: IExerItemProps) {
           </div>
         </div>
         <div>
-          <Link to={`/play/${exerData.id}`}>
+          <Link to={`/play/${exerData.exerId}`}>
             <i className="fa-solid fa-play"></i>
           </Link>
           <button
@@ -238,7 +234,7 @@ export default function ExerItem({ exerData }: IExerItemProps) {
           </button>
           <button
             onClick={() => {
-              onClickDel(exerData.id);
+              onClickDel(exerData.exerId);
             }}
           >
             <i className="fa-solid fa-trash"></i>
@@ -247,7 +243,7 @@ export default function ExerItem({ exerData }: IExerItemProps) {
       </InfoCt>
       {toggle && (
         <UpdateCt>
-          <form onSubmit={handleSubmit(onValid)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <input {...register("exerName")} placeholder="운동 이름" />
             </div>

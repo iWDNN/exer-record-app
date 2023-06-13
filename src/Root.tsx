@@ -27,7 +27,6 @@ function Root() {
     <Container>
       <Header />
       <Page>
-        {addTg && <AddTap />}
         <Outlet />
       </Page>
     </Container>

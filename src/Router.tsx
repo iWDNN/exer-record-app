@@ -4,6 +4,7 @@ import ExerLogs from "./Routes/ExerLogs";
 import PlayExer from "./Routes/PlayExer";
 import ExerList from "./Routes/ExerList";
 import ExerLabs from "./Routes/ExerLabs";
+import LabDetail from "./Routes/LabDetail";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "labs",
         element: <ExerLabs />,
+      },
+      {
+        path: "labs/:exerId",
+        element: <LabDetail />,
       },
     ],
   },

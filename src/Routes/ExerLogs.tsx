@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { resetLog } from "../redux/exercise/exerLogsSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { EXER_LOGS } from "../ls-type";
+import { formatTime } from "../utils";
 const ExerLogList = styled.section`
   width: 100%;
   display: flex;
@@ -38,7 +39,7 @@ const ListHeader = styled.div`
     }
   }
   div:first-child {
-    width: 100px;
+    width: 200px;
   }
   div:nth-child(2) {
     flex-grow: 1;
@@ -48,8 +49,11 @@ const ListHeader = styled.div`
     align-items: center;
     margin: 0 1em;
     span {
-      width: 100px;
+      width: 120px;
       display: block;
+      &:last-child {
+        border-right: none;
+      }
     }
   }
   div:last-child {
@@ -68,7 +72,7 @@ const ExerLogItem = styled.div`
     background-color: #352f33;
   }
   div:first-child {
-    width: 100px;
+    width: 200px;
     text-align: center;
   }
   div:nth-child(2) {
@@ -81,7 +85,7 @@ const ExerLogItem = styled.div`
     font-size: 0.9em;
     margin: 0 1em;
     span {
-      width: 100px;
+      width: 120px;
       padding-right: 0.4em;
       display: block;
       text-align: end;
@@ -121,6 +125,8 @@ export default function ExerLogs() {
             <span>운동 이름</span>
           </div>
           <div>
+            <span>총 걸린 시간</span>
+            <span>세트당 평균 시간</span>
             <span>세트</span>
             <span>횟수</span>
             <span>달성 횟수</span>
@@ -130,23 +136,41 @@ export default function ExerLogs() {
           </div>
         </ListHeader>
         {records?.map((record) => (
-          <ExerLogItem key={record.id}>
+          <ExerLogItem key={record.recordId}>
             <div>
-              <span>{record.date}</span>
+              <span>
+                {new Date(record.date).toLocaleDateString()}{" "}
+                {new Date(record.date).toLocaleTimeString()}
+              </span>
             </div>
             <div>
-              <span>{record.name}</span>
+              <span>{record.exerName}</span>
             </div>
             <div>
-              <span>{record.setCount}</span>
+              <span>
+                {formatTime(
+                  record.recordList.reduce((a, b) => a + b, 0),
+                  "str"
+                )}
+              </span>
+              <span>
+                {formatTime(
+                  Math.floor(
+                    record.recordList.reduce((a, b) => a + b, 0) /
+                      record.exerSetCount
+                  ),
+                  "str"
+                )}
+              </span>
+              <span>{record.exerSetCount}</span>
               <span>{record.exerCount}</span>
               <span>
-                {record.playSetCount}/{record.setCount}
+                {record.performedSetCount}/{record.exerSetCount}
               </span>
             </div>
 
             <IsCmp isCmp={record.cmp}>
-              <i className="fa-solid fa-check"></i>
+              <i className="fa-solid fa-circle"></i>
             </IsCmp>
           </ExerLogItem>
         ))}

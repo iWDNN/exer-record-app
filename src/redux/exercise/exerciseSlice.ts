@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface IExerciseState {
-  id: string;
+  exerId: string;
   exerName: string;
   exerCount: number;
   exerSetCount: number;
@@ -17,7 +17,7 @@ export const exerciseSlice = createSlice({
     setExer: (state, action: PayloadAction<IExerciseState[]>) => action.payload,
     uptExer: (state, action: PayloadAction<IExerciseState>) => {
       const targetIndex = state.findIndex(
-        (exer) => exer.id === action.payload.id
+        (exer) => exer.exerId === action.payload.exerId
       );
       state[targetIndex] = action.payload;
     },
@@ -25,7 +25,7 @@ export const exerciseSlice = createSlice({
       state.push(action.payload);
     },
     delExer: (state, action: PayloadAction<string>) =>
-      state.filter((exercise) => exercise.id !== action.payload),
+      state.filter((exercise) => exercise.exerId !== action.payload),
   },
 });
 

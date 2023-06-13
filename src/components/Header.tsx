@@ -6,7 +6,7 @@ import { useAppDispatch } from "../redux/hooks";
 
 const Ct = styled.div`
   display: grid;
-  grid-template-columns: 10% 80% 10%;
+  grid-template-columns: 25% 50% 25%;
   align-items: center;
   * {
     padding: 0.5em 0;
@@ -57,7 +57,7 @@ export default function Header() {
   const dispatch = useAppDispatch();
   return (
     <Ct>
-      <Link to="/">exer app</Link>
+      <Link to="/">exer record</Link>
       <ul>
         <LinkEl isActive={pathname === "/"}>
           <Link to="/">목록</Link>
@@ -69,7 +69,7 @@ export default function Header() {
           <Link to="/labs">분석</Link>
         </LinkEl>
       </ul>
-      {pathname === "/" ? (
+      {/* {pathname === "/" ? (
         <button onClick={() => dispatch(addToggleSwitch("toggle"))}>
           <i className="fa-solid fa-plus"></i>
         </button>
@@ -77,7 +77,7 @@ export default function Header() {
         <Link to="/">
           <i className="fa-solid fa-reply"></i>
         </Link>
-      ) : null}
+      ) : null} */}
     </Ct>
   );
 }

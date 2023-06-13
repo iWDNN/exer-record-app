@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
 
-export const formatTime = (sec: number) => {
-  const mins = String(Math.floor(sec / 60)).padStart(2, "0");
-  const secs = String(sec % 60).padStart(2, "0");
-  return `${mins}:${secs}`;
+export const formatTime = (sec: number, returnType: string) => {
+  const mins = String(Math.floor(sec / 6000)).padStart(2, "0");
+  const secs = String(Math.floor((sec % 6000) / 100)).padStart(2, "0");
+  const mls = String(sec % 100).padStart(2, "0");
+  if (returnType === "arr") return [mins, secs, mls];
+  else if (returnType === "str") return `${mins}:${secs}.${mls}`;
+  else return "returnType Error";
 };
 
 export const countdown = (sec: number, useStateSetFunc: Function) => {
@@ -24,7 +27,6 @@ export const countdown = (sec: number, useStateSetFunc: Function) => {
 
 export const useInterval = (callback: any, delay: null | number) => {
   const savedCallback = useRef<any>();
-  console.log("imalive");
   // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback;

@@ -74,7 +74,7 @@ export default function AddTap() {
   const onSubmit = (formData: IFormData) => {
     dispatch(
       addExer({
-        id: uuid(),
+        exerId: uuid(),
         exerName: formData.exerName,
         exerCount: Math.floor(formData.maxCount / 3),
         exerSetCount: formData.setCount,
