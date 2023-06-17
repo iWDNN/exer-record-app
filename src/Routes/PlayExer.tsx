@@ -66,43 +66,66 @@ export default function PlayExer() {
 
   const { exerId } = useParams();
   const [exerInfo] = useAppSelector((state) => state.exercise).filter(
-    (exer) => exer.exerId && exerId
+    (exer) => exer.exerId === exerId && exer
   );
 
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [initRun, setInitRun] = useState(false);
+  const [isRest, setIsRest] = useState(false);
+  const [initRun, setInitRun] = useState(true);
   const [records, setRecords] = useState<number[]>([]);
   const formattedTime = useMemo(() => formatTime(time, "arr"), [time]);
+
+  const watchState = () => {
+    if (!isRest && !isRunning && initRun) return "운동시작전";
+    else if (isRunning && !initRun) return "운동중";
+    else if (!isRunning && !initRun) return "일시정지";
+    else if (isRest && !isRunning && initRun) return "휴식중";
+    else if (
+      records.filter((record) => record !== 0).length === +exerInfo.exerSetCount
+    )
+      return "운동완료";
+  };
+  const onClickPlay = () => {
+    setIsRunning((prev) => !prev);
+    setInitRun(false);
+  };
+  const onClickReset = () => {
+    setIsRunning(false);
+    setInitRun(true);
+    setTime(0);
+    setRecords([]);
+  };
+  const onClickSetCmp = () => {
+    setIsRunning(false);
+    setRecords((prev) => [...prev, time]);
+    setTime(exerInfo.exerSetRestTerm * 100);
+    setIsRest(true);
+    setInitRun(true);
+  };
 
   const onClickSubmit = () => {
     const performedSet = records.filter((record) => record !== 0).length;
     const result: IRecord = {
       recordId: uuid(),
-      date: new Date().toString(),
+      date: new Date().getTime(),
       recordList: records,
       performedSetCount: performedSet,
       cmp: performedSet === +exerInfo.exerSetCount,
       ...exerInfo,
     };
-    // console.log(result);
     dispatch(addLog(result));
   };
   useInterval(
     () => {
-      setTime(time + 1);
+      if (isRest && time === 1) {
+        setIsRest(false);
+      }
+      if (isRunning) setTime(time + 1);
+      if (isRest) setTime(time - 1);
     },
-    isRunning ? 10 : null
+    isRunning || isRest ? 10 : null
   );
-  const watchState = () => {
-    if (
-      records.filter((record) => record !== 0).length === +exerInfo.exerSetCount
-    )
-      return "운동완료";
-    else if (isRunning && initRun) return "운동중";
-    else if (!isRunning && initRun) return "일시정지";
-    else if (!isRunning && !initRun) return "운동시작전";
-  };
   return (
     <Ct>
       <TimerCt>
@@ -117,12 +140,7 @@ export default function PlayExer() {
         <span>{watchState()}</span>
       </StateCt>
       <ControlCt>
-        <button
-          onClick={() => {
-            setIsRunning((prev) => !prev);
-            setInitRun(true);
-          }}
-        >
+        <button onClick={onClickPlay}>
           {watchState() === "운동중" ? (
             <i className="fa-solid fa-pause" />
           ) : watchState() === "일시정지" ? (
@@ -131,33 +149,11 @@ export default function PlayExer() {
             <i className="fa-solid fa-play" />
           )}
         </button>
-        <button
-          onClick={() => {
-            setIsRunning(false);
-            setInitRun(false);
-            setTime(0);
-            setRecords([]);
-          }}
-        >
+        <button onClick={onClickReset}>
           <i className="fa-solid fa-arrow-rotate-right" />
         </button>
-        <button
-          onClick={() => {
-            setIsRunning(false);
-            setInitRun(false);
-            setRecords((prev) => [...prev, time]);
-            setTime(0);
-          }}
-        >
-          세트완료
-        </button>
-        <button
-          onClick={() => {
-            onClickSubmit();
-          }}
-        >
-          제출
-        </button>
+        <button onClick={onClickSetCmp}>세트완료</button>
+        <button onClick={onClickSubmit}>제출</button>
       </ControlCt>
       <RecordCt>
         <ul>

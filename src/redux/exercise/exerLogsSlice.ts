@@ -4,7 +4,7 @@ import { IExerciseState } from "./exerciseSlice";
 
 export interface IRecord extends IExerciseState {
   recordId: string;
-  date: string;
+  date: number;
   recordList: number[];
   performedSetCount: number;
   cmp: boolean;

@@ -76,7 +76,10 @@ export default function AddTap() {
       addExer({
         exerId: uuid(),
         exerName: formData.exerName,
-        exerCount: Math.floor(formData.maxCount / 3),
+        exerCount:
+          Math.floor(formData.maxCount / 3) <= 2
+            ? 2
+            : Math.floor(formData.maxCount / 3),
         exerSetCount: formData.setCount,
         exerSetRestTerm: formData.setRestTerm,
       })

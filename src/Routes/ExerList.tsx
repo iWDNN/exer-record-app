@@ -4,7 +4,8 @@ import styled from "styled-components";
 import AddTap from "../components/AddTap";
 import ExerItem from "../components/ExerItem";
 import { IExerciseState } from "../redux/exercise/exerciseSlice";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { addToggleSwitch } from "../redux/toggle/toggleSlice";
 
 const Ct = styled.section`
   width: 100%;
@@ -35,15 +36,16 @@ const List = styled.ul`
 `;
 
 export default function ExerList() {
+  const dispatch = useAppDispatch();
   const exercise = useAppSelector((state) => state.exercise);
-  const [addTg, setAddTg] = useState(false);
+  const addTg = useAppSelector((state) => state.toggle.addToggle);
 
   return (
     <>
       <Ct>
         <button
           onClick={() => {
-            setAddTg((prev) => !prev);
+            dispatch(addToggleSwitch("toggle"));
           }}
         >
           <i className="fa-solid fa-plus"></i>

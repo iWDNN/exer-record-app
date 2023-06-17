@@ -177,25 +177,16 @@ export default function ExerItem({ exerData }: IExerItemProps) {
   const onClickDel = (id: string) => {
     dispatch(delExer(id));
   };
+
+  const { exerId, ...otherExerData } = exerData;
   const { register, handleSubmit } = useForm<IExerciseState>({
-    defaultValues: {
-      exerName: exerData.exerName,
-      exerCount: exerData.exerCount,
-      exerSetCount: exerData.exerSetCount,
-      exerSetRestTerm: exerData.exerSetRestTerm,
-    },
+    defaultValues: otherExerData,
   });
-  console.log(exerData.exerId);
+
   const onSubmit = (formData: IExerciseState) => {
-    dispatch(
-      uptExer({
-        exerId: exerData.exerId,
-        exerName: formData.exerName,
-        exerCount: formData.exerCount,
-        exerSetCount: formData.exerSetCount,
-        exerSetRestTerm: formData.exerSetRestTerm,
-      })
-    );
+    const result = formData;
+    result.exerId = exerData.exerId;
+    dispatch(uptExer(result));
     setToggle(false);
   };
   return (
