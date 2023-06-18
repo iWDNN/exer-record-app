@@ -130,7 +130,6 @@ export default function ExerLogs() {
     exerCount: false,
   });
   const onClickReset = () => {
-    localStorage.setItem(EXER_LOGS, JSON.stringify([]));
     dispatch(resetLog());
   };
 
@@ -154,7 +153,6 @@ export default function ExerLogs() {
 
   // 운동 시작 시간, 종료 시간
   // 세트당 걸린 시간, 휴식 시간,
-
   return (
     <ExerLogList>
       <button onClick={onClickReset}>초기화</button>

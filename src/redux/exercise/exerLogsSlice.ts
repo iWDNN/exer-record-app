@@ -10,7 +10,7 @@ export interface IRecord extends IExerciseState {
   cmp: boolean;
 }
 
-interface IExerIdName {
+export interface IExerIdName {
   name: string;
   id: string;
 }

@@ -7,11 +7,11 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { formatTime, useInterval } from "../utils";
 const Ct = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 30% 20% 20% 30%;
-  /* display: flex;
+  /* display: grid;
+  grid-template-columns: 30% 20% 20% 30%; */
+  display: flex;
   flex-direction: column;
-  align-items: center; */
+  align-items: center;
 
   div {
     width: 100%;
@@ -38,6 +38,13 @@ const StateCt = styled.div`
   background-color: #171717;
   display: flex;
   flex-direction: column;
+  span {
+    display: block;
+  }
+  & > span:first-child {
+  }
+  & > span:last-child {
+  }
 `;
 const ControlCt = styled.div`
   display: grid;
@@ -74,6 +81,7 @@ export default function PlayExer() {
   const [isRest, setIsRest] = useState(false);
   const [initRun, setInitRun] = useState(true);
   const [records, setRecords] = useState<number[]>([]);
+
   const formattedTime = useMemo(() => formatTime(time, "arr"), [time]);
 
   const watchState = () => {
@@ -92,6 +100,7 @@ export default function PlayExer() {
   };
   const onClickReset = () => {
     setIsRunning(false);
+    setIsRest(false);
     setInitRun(true);
     setTime(0);
     setRecords([]);
@@ -111,7 +120,7 @@ export default function PlayExer() {
       date: new Date().getTime(),
       recordList: records,
       performedSetCount: performedSet,
-      cmp: performedSet === +exerInfo.exerSetCount,
+      cmp: performedSet >= +exerInfo.exerSetCount,
       ...exerInfo,
     };
     dispatch(addLog(result));

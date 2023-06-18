@@ -1,28 +1,38 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
+import styled from "styled-components";
+import { IExerIdName } from "../redux/exercise/exerLogsSlice";
+import { useAppSelector } from "../redux/hooks";
 
-export default function ExerLabsItem() {
+interface IExerLabsItemProps {
+  exerInfo: IExerIdName;
+}
+
+const Ct = styled.div`
+  padding: 1em;
+  background-color: #373737;
+  & > div {
+  }
+  & > div:nth-child(1) {
+  }
+  & > div:nth-child(2) {
+    & > div:nth-child(2) {
+      color: #000;
+    }
+  }
+`;
+
+export default function ExerLabsItem({ exerInfo }: IExerLabsItemProps) {
+  const exerLogs = useAppSelector((state) => state.exerLogs).filter(
+    (exer) => exer.exerId === exerInfo.id
+  );
+  console.log("specific exerLogs :", exerLogs);
   return (
-    <>
-      <li>
-        <h2>횟수 증가 그래프</h2>
-        <ReactApexChart
-          type="line"
-          options={{}}
-          series={[
-            {
-              name: "hello",
-              data: [4, 1, 5, 6, 4, 6],
-            },
-          ]}
-        />
-      </li>
-      <li>
-        <h2>걸린 시간 그래프</h2>
-      </li>
-      <li>
-        <h2>세트 수 그래프</h2>
-      </li>
-    </>
+    <Ct>
+      <div>
+        <h1>{exerInfo.name}</h1>
+      </div>
+      <div></div>
+    </Ct>
   );
 }

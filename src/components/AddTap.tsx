@@ -71,6 +71,7 @@ export default function AddTap() {
     handleSubmit,
     formState: { errors },
   } = useForm<IFormData>();
+
   const onSubmit = (formData: IFormData) => {
     dispatch(
       addExer({
@@ -80,8 +81,8 @@ export default function AddTap() {
           Math.floor(formData.maxCount / 3) <= 2
             ? 2
             : Math.floor(formData.maxCount / 3),
-        exerSetCount: formData.setCount,
-        exerSetRestTerm: formData.setRestTerm,
+        exerSetCount: +formData.setCount,
+        exerSetRestTerm: +formData.setRestTerm,
       })
     );
     dispatch(addToggleSwitch(false));
