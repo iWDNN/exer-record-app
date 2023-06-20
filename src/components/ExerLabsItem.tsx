@@ -26,7 +26,6 @@ export default function ExerLabsItem({ exerInfo }: IExerLabsItemProps) {
   const exerLogs = useAppSelector((state) => state.exerLogs).filter(
     (exer) => exer.exerId === exerInfo.id
   );
-  console.log("specific exerLogs :", exerLogs);
   return (
     <Ct>
       <div>

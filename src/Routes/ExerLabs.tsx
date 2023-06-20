@@ -46,7 +46,7 @@ const Container = styled.div`
 export default function ExerLabs() {
   const exerLogs = useAppSelector((state) => state.exerLogs);
   const deDupList = useSelector(selectDeDupExerLogs);
-  console.log(exerLogs);
+
   return (
     <Container>
       <section>

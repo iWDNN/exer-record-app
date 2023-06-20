@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { resetLog } from "../redux/exercise/exerLogsSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { EXER_LOGS } from "../ls-type";
+import { EXER_LOGS } from "../type";
 import { formatTime } from "../utils";
 import SortIcon from "../components/common/SortIcon";
 

@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import uuid from "react-uuid";
 import styled from "styled-components";
 import { addLog, IRecord } from "../redux/exercise/exerLogsSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { EXERCISE_STATE } from "../type";
 import { formatTime, useInterval } from "../utils";
+
 const Ct = styled.div`
   width: 100%;
   /* display: grid;
@@ -21,6 +23,12 @@ const Ct = styled.div`
     align-items: center;
   }
 `;
+const TitleCt = styled.div`
+  background: #262626;
+  & > h1 {
+  }
+`;
+
 const TimerCt = styled.div`
   width: 120px;
   font-size: 4em;
@@ -85,15 +93,17 @@ export default function PlayExer() {
   const formattedTime = useMemo(() => formatTime(time, "arr"), [time]);
 
   const watchState = () => {
-    if (!isRest && !isRunning && initRun) return "운동시작전";
-    else if (isRunning && !initRun) return "운동중";
-    else if (!isRunning && !initRun) return "일시정지";
-    else if (isRest && !isRunning && initRun) return "휴식중";
-    else if (
-      records.filter((record) => record !== 0).length === +exerInfo.exerSetCount
-    )
-      return "운동완료";
+    if (initRun && !isRunning && !isRest) return EXERCISE_STATE.init;
+    else if (!initRun && isRunning && !isRest) return EXERCISE_STATE.play;
+    else if (!initRun && !isRunning && isRest) return EXERCISE_STATE.rest;
+    else if (!initRun && records.length === 0 && !isRunning && !isRest)
+      return EXERCISE_STATE.pause;
+    else if (!initRun && records.length > 0 && !isRunning && !isRest)
+      return EXERCISE_STATE.readyNextSet;
+    else if (records.length === +exerInfo.exerSetCount)
+      return EXERCISE_STATE.cmp;
   };
+
   const onClickPlay = () => {
     setIsRunning((prev) => !prev);
     setInitRun(false);
@@ -110,7 +120,6 @@ export default function PlayExer() {
     setRecords((prev) => [...prev, time]);
     setTime(exerInfo.exerSetRestTerm * 100);
     setIsRest(true);
-    setInitRun(true);
   };
 
   const onClickSubmit = () => {
@@ -137,11 +146,15 @@ export default function PlayExer() {
   );
   return (
     <Ct>
+      <TitleCt>
+        <h1>{exerInfo.exerName}</h1>
+      </TitleCt>
       <TimerCt>
         <span>{formattedTime[0]}</span>:<span>{formattedTime[1]}</span>.
         <span>{formattedTime[2]}</span>
       </TimerCt>
       <StateCt>
+        <span>세트당 {exerInfo.exerCount}회</span>
         <span>
           {records.filter((record) => record !== 0).length}/
           {exerInfo.exerSetCount}
@@ -149,20 +162,31 @@ export default function PlayExer() {
         <span>{watchState()}</span>
       </StateCt>
       <ControlCt>
-        <button onClick={onClickPlay}>
-          {watchState() === "운동중" ? (
-            <i className="fa-solid fa-pause" />
-          ) : watchState() === "일시정지" ? (
-            <i className="fa-solid fa-play" />
-          ) : (
-            <i className="fa-solid fa-play" />
-          )}
-        </button>
-        <button onClick={onClickReset}>
-          <i className="fa-solid fa-arrow-rotate-right" />
-        </button>
-        <button onClick={onClickSetCmp}>세트완료</button>
-        <button onClick={onClickSubmit}>제출</button>
+        {watchState() === EXERCISE_STATE.cmp ? (
+          <Link to={"/"}>돌아가기</Link>
+        ) : (
+          <>
+            {!(watchState() === EXERCISE_STATE.rest) ? (
+              <>
+                <button onClick={onClickPlay}>
+                  {watchState() === EXERCISE_STATE.play ? (
+                    <i className="fa-solid fa-pause" />
+                  ) : watchState() === EXERCISE_STATE.pause ? (
+                    <i className="fa-solid fa-play" />
+                  ) : (
+                    <i className="fa-solid fa-play" />
+                  )}
+                </button>
+              </>
+            ) : null}
+
+            <button onClick={onClickReset}>
+              <i className="fa-solid fa-arrow-rotate-right" />
+            </button>
+            <button onClick={onClickSetCmp}>세트완료</button>
+            <button onClick={onClickSubmit}>제출</button>
+          </>
+        )}
       </ControlCt>
       <RecordCt>
         <ul>
