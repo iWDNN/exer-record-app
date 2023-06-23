@@ -118,9 +118,9 @@ export default function ExerLabs() {
   );
   return (
     <Container>
-      <section>
-        {exerLogs && (
-          <>
+      {exerLogs && (
+        <>
+          <section>
             <div>
               <ReactApexChart
                 type="bar"
@@ -243,22 +243,22 @@ export default function ExerLabs() {
                 <span>{lastDate}</span>
               </div>
             </div>
-          </>
-        )}
-      </section>
-      <section>
-        <h2>운동 종목 별 분석</h2>
-        <ul>
-          {exerLogs &&
-            deDupList.map((exer) => (
-              <li key={uuid()}>
-                <Link to={exer.id}>
-                  <ExerLabsItem exerInfo={exer} />
-                </Link>
-              </li>
-            ))}
-        </ul>
-      </section>
+          </section>
+          <section>
+            <h2>운동 종목 별 분석</h2>
+            <ul>
+              {exerLogs &&
+                deDupList.map((exer) => (
+                  <li key={uuid()}>
+                    <Link to={exer.id}>
+                      <ExerLabsItem exerInfo={exer} />
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </section>
+        </>
+      )}
     </Container>
   );
 }

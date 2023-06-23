@@ -177,7 +177,9 @@ export default function PlayExer() {
                     <i className="fa-solid fa-play" />
                   )}
                 </button>
-                {!initRun && <button onClick={onClickSetCmp}>세트완료</button>}
+                {!initRun && time !== 0 && (
+                  <button onClick={onClickSetCmp}>세트완료</button>
+                )}
               </>
             ) : null}
 
