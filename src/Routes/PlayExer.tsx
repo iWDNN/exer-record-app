@@ -177,13 +177,13 @@ export default function PlayExer() {
                     <i className="fa-solid fa-play" />
                   )}
                 </button>
+                {!initRun && <button onClick={onClickSetCmp}>세트완료</button>}
               </>
             ) : null}
 
             <button onClick={onClickReset}>
               <i className="fa-solid fa-arrow-rotate-right" />
             </button>
-            <button onClick={onClickSetCmp}>세트완료</button>
             <button onClick={onClickSubmit}>제출</button>
           </>
         )}
