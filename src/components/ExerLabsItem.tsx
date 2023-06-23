@@ -10,7 +10,8 @@ interface IExerLabsItemProps {
 
 const Ct = styled.div`
   padding: 1em;
-  background-color: #373737;
+  background-color: #1170bf;
+  border-radius: 7px;
   & > div {
   }
   & > div:nth-child(1) {
