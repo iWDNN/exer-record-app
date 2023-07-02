@@ -23,18 +23,15 @@ export default function LabDetail() {
   return (
     <Ct>
       <h2>{exerLogs[0].exerName}</h2>
-      <section>
-        <ReactApexChart
-          type="line"
-          options={{}}
-          series={[
-            {
-              name: "exerCount",
-              data: exerLogs.map((exer) => exer.performedSetCount),
-            },
-          ]}
-        />
-      </section>
+      <div>세트 완수율</div>
+      <div>운동 시작한 날짜</div>
+      <div>가장 최근에 운동한 날짜</div>
+      <div>무게 추이도</div>
+      <div>일주일 간 무게 증가량</div>
+      <div>한 달 간 무게 증가량</div>
+      <div>횟수 추이도</div>
+      <div>일주일 간 횟수 증가량</div>
+      <div>한 달 간 횟수 증가량</div>
     </Ct>
   );
 }

@@ -120,7 +120,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 body {
   line-height: 1;
-  background-color: #3E393C;
+  background-color: ${(props) => props.theme.subColor};
   color:#fff;
   opacity: 0.95;
 }
@@ -158,10 +158,10 @@ let persistor = persistStore(store);
 root.render(
   <>
     {/* <React.StrictMode> */}
-    <GlobalStyle />
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor} />
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <RouterProvider router={router} />
       </ThemeProvider>
     </Provider>

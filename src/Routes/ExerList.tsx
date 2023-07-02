@@ -9,31 +9,42 @@ import { addToggleSwitch } from "../redux/toggle/toggleSlice";
 
 const Ct = styled.section`
   width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
   padding: 0 1em;
-
-  button:first-child {
-    border: none;
-    border-radius: 7px;
-    padding: 0.75em 1em;
-    margin: 1em 0;
-    cursor: pointer;
+  & > header {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h1 {
+      font-weight: 700;
+      font-size: 1.5em;
+      letter-spacing: 1px;
+    }
+    button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 7px;
+      background-color: ${(props) => props.theme.mainColor};
+      color: #fff;
+      font-size: 1.1em;
+    }
   }
 `;
 const List = styled.ul`
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-
-  @media screen and (max-width: 1439px) {
-    display: flex;
-    flex-direction: column;
-  }
+  display: flex;
+  flex-direction: column;
+  background-color: ${(props) => props.theme.mainColor};
+  /* @media screen and (max-width: 1439px) {
+  } */
 `;
+const ListHeader = styled.div``;
 
 export default function ExerList() {
   const dispatch = useAppDispatch();
@@ -43,14 +54,18 @@ export default function ExerList() {
   return (
     <>
       <Ct>
-        <button
-          onClick={() => {
-            dispatch(addToggleSwitch("toggle"));
-          }}
-        >
-          <i className="fa-solid fa-plus"></i>
-        </button>
+        <header>
+          <h1>운동 리스트</h1>
+          <button
+            onClick={() => {
+              dispatch(addToggleSwitch("toggle"));
+            }}
+          >
+            <i className="fa-solid fa-plus"></i>
+          </button>
+        </header>
         {addTg && <AddTap />}
+
         <List>
           {exercise.map((exer: IExerciseState) => (
             <ExerItem exerData={exer} key={uuid()} />

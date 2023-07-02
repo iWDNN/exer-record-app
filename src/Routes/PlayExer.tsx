@@ -9,73 +9,67 @@ import { formatTime, useInterval } from "../utils";
 
 const Ct = styled.div`
   width: 100%;
-  /* display: grid;
-  grid-template-columns: 30% 20% 20% 30%; */
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 65% 35%;
   align-items: center;
-
-  div {
-    width: 100%;
-    height: 150px;
+  padding: 1em;
+  border: 1px solid gray;
+  background-color: #121212;
+  * {
+    border: 1px solid gray;
+  }
+  & > section {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+  }
+  & > section:nth-child(1) {
+    width: 100%;
+    height: 100%;
+  }
+  & > section:nth-child(2) {
+    width: 100%;
+    height: 100%;
   }
 `;
 const TitleCt = styled.div`
-  background: #262626;
-  & > h1 {
-  }
-`;
-
-const TimerCt = styled.div`
-  width: 120px;
-  font-size: 4em;
-  font-family: "Exo", sans-serif;
-  background: #000;
-  span {
-    display: block;
-    width: 85px;
-    &:nth-child(2) {
-      text-align: center;
-    }
-  }
-`;
-const StateCt = styled.div`
-  background-color: #171717;
-  display: flex;
-  flex-direction: column;
-  span {
-    display: block;
-  }
-  & > span:first-child {
-  }
-  & > span:last-child {
-  }
-`;
-const ControlCt = styled.div`
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  background-color: #282828;
-  button {
-    cursor: pointer;
+  grid-template-columns: 30% 70%;
+  align-items: center;
+  & > * {
+    padding: 1em;
+  }
+  h1 {
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+  h2 {
+    font-weight: 600;
+  }
+  & > div:nth-child(2) {
+    width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
-    border: none;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-    background-color: #171717;
-    color: #fff;
-    i {
-      /* color: #fff; */
-      /* text-shadow: 0 0 5px #219cf3; */
+    span {
+      margin: 0 1em;
     }
   }
 `;
-const RecordCt = styled.div`
-  background-color: #565656;
+const TimerCt = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 5.5em;
 `;
+const StateCt = styled.div``;
+const ControlCt = styled.div``;
+
+const RecordCt = styled.div``;
+
 export default function PlayExer() {
   const dispatch = useAppDispatch();
 
@@ -146,59 +140,71 @@ export default function PlayExer() {
   );
   return (
     <Ct>
-      <TitleCt>
-        <h1>{exerInfo.exerName}</h1>
-      </TitleCt>
-      <TimerCt>
-        <span>{formattedTime[0]}</span>:<span>{formattedTime[1]}</span>.
-        <span>{formattedTime[2]}</span>
-      </TimerCt>
-      <StateCt>
-        <span>세트당 {exerInfo.exerCount}회</span>
-        <span>
-          {records.filter((record) => record !== 0).length}/
-          {exerInfo.exerSetCount}
-        </span>
-        <span>{watchState()}</span>
-      </StateCt>
-      <ControlCt>
-        {watchState() === EXERCISE_STATE.cmp ? (
-          <Link to={"/"}>돌아가기</Link>
-        ) : (
-          <>
-            {!(watchState() === EXERCISE_STATE.rest) ? (
-              <>
-                <button onClick={onClickPlay}>
-                  {watchState() === EXERCISE_STATE.play ? (
-                    <i className="fa-solid fa-pause" />
-                  ) : watchState() === EXERCISE_STATE.pause ? (
-                    <i className="fa-solid fa-play" />
-                  ) : (
-                    <i className="fa-solid fa-play" />
+      <section>
+        <TitleCt>
+          <div>
+            <h1>{exerInfo.exerName}</h1>
+            {exerInfo.exerWeight && <h2>{exerInfo.exerWeight}kg</h2>}
+          </div>
+          <div>
+            <span>세트 {exerInfo.exerSetCount} 세트</span>
+            <span>횟수 {exerInfo.exerCount} 회</span>
+            <span>휴식 시간 {exerInfo.exerSetRestTerm} 초</span>
+          </div>
+        </TitleCt>
+        <TimerCt>
+          <span>{formattedTime[0]}</span>:<span>{formattedTime[1]}</span>.
+          <span>{formattedTime[2]}</span>
+        </TimerCt>
+      </section>
+      <section>
+        <StateCt>
+          <span>세트당 {exerInfo.exerCount}회</span>
+          <span>
+            {records.filter((record) => record !== 0).length}/
+            {exerInfo.exerSetCount}
+          </span>
+          <span>{watchState()}</span>
+        </StateCt>
+        <ControlCt>
+          {watchState() === EXERCISE_STATE.cmp ? (
+            <Link to={"/"}>돌아가기</Link>
+          ) : (
+            <>
+              {!(watchState() === EXERCISE_STATE.rest) ? (
+                <>
+                  <button onClick={onClickPlay}>
+                    {watchState() === EXERCISE_STATE.play ? (
+                      <i className="fa-solid fa-pause" />
+                    ) : watchState() === EXERCISE_STATE.pause ? (
+                      <i className="fa-solid fa-play" />
+                    ) : (
+                      <i className="fa-solid fa-play" />
+                    )}
+                  </button>
+                  {!initRun && time !== 0 && (
+                    <button onClick={onClickSetCmp}>세트완료</button>
                   )}
-                </button>
-                {!initRun && time !== 0 && (
-                  <button onClick={onClickSetCmp}>세트완료</button>
-                )}
-              </>
-            ) : null}
+                </>
+              ) : null}
 
-            <button onClick={onClickReset}>
-              <i className="fa-solid fa-arrow-rotate-right" />
-            </button>
-            <button onClick={onClickSubmit}>제출</button>
-          </>
-        )}
-      </ControlCt>
-      <RecordCt>
-        <ul>
-          {records.map((record, i) => (
-            <li key={uuid()}>
-              {i + 1}번째 {formatTime(record, "str")}
-            </li>
-          ))}
-        </ul>
-      </RecordCt>
+              <button onClick={onClickReset}>
+                <i className="fa-solid fa-arrow-rotate-right" />
+              </button>
+              <button onClick={onClickSubmit}>제출</button>
+            </>
+          )}
+        </ControlCt>
+        <RecordCt>
+          <ul>
+            {records.map((record, i) => (
+              <li key={uuid()}>
+                {i + 1}번째 {formatTime(record, "str")}
+              </li>
+            ))}
+          </ul>
+        </RecordCt>
+      </section>
     </Ct>
   );
 }

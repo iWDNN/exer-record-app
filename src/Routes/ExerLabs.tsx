@@ -15,12 +15,13 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: #2a2527;
   & > section {
     width: 100%;
-    background-color: black;
     margin: 1em 0;
     padding: 1em 0;
     opacity: 0.9;
+    border-bottom: #eee;
     h2 {
       padding: 1em 0;
     }
@@ -70,6 +71,10 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    & > h2 {
+      font-size: 1.5em;
+      font-weight: 700;
+    }
     & > ul {
       display: flex;
       & > li {
@@ -202,12 +207,6 @@ export default function ExerLabs() {
                       },
                     },
                   },
-                  title: {
-                    text: "운동 총 횟수",
-                    style: {
-                      color: "#fff",
-                    },
-                  },
                 }}
               />
             </div>
@@ -239,7 +238,7 @@ export default function ExerLabs() {
                 </span>
               </div>
               <div>
-                <span>가장 최근에 운동한 날짜</span>
+                <span>마지막에 운동한 날짜</span>
                 <span>{lastDate}</span>
               </div>
             </div>

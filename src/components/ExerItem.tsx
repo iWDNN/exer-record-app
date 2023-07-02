@@ -17,44 +17,58 @@ const Ct = styled.li`
   height: 110px;
   display: flex;
   flex-direction: column;
-  background-color: #2b2529;
-  border-radius: 10px;
-  /* border-top-left-radius: 10px;
-  border-top-right-radius: 10px; */
   box-sizing: border-box;
-  @media screen and (max-width: 1439px) {
-    height: 100%;
-  }
+  border-bottom: 1px solid #4e494b;
 `;
 
 const InfoCt = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 40% 40% 20%;
+  grid-template-columns: 10% 20% 40% 30%;
   align-items: center;
   padding: 1em;
-
+  div {
+    place-self: center;
+  }
   & > div:nth-child(1) {
+    h2 {
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+  }
+  & > div:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 1;
     pointer-events: none;
-    h1 {
+    & > h1 {
       text-align: center;
-      flex-shrink: 0;
-      flex-grow: 1;
       font-size: 2em;
       font-weight: 700;
       letter-spacing: 2px;
     }
+    & > h2 {
+      margin-left: 10px;
+      font-size: 1.5em;
+      font-weight: 700;
+    }
   }
 
-  & > div:nth-child(2) {
-    pointer-events: none;
+  & > div:nth-child(3) {
+    width: 100%;
     display: flex;
-    /* justify-content: space-evenly; */
+    justify-content: center;
     align-items: center;
     margin-top: 10px;
+    font-size: 1.3em;
+    pointer-events: none;
     & > div {
+      width: 25%;
       display: flex;
+      justify-content: space-evenly;
       align-items: center;
       padding: 0 10px;
       border-right: 2px solid #4e494b;
@@ -77,7 +91,8 @@ const InfoCt = styled.div`
       }
     }
   }
-  & > div:nth-child(3) {
+  & > div:nth-child(4) {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,9 +102,9 @@ const InfoCt = styled.div`
       align-items: center;
       border-radius: 6px;
       border: none;
-      width: 25px;
-      height: 25px;
-      margin: 0 0.5em;
+      width: 40px;
+      height: 40px;
+      margin: 0 1em;
       i {
         color: #fff;
       }
@@ -121,11 +136,10 @@ const UpdateCt = styled.div`
   form {
     width: 100%;
     display: grid;
-    grid-template-columns: 40% 40% 20%;
+    grid-template-columns: 10% 20% 40% 30%;
     align-items: center;
     & > div {
       display: flex;
-
       align-items: center;
       font-size: 0.8em;
       padding: 10px 0;
@@ -144,17 +158,27 @@ const UpdateCt = styled.div`
       }
     }
     & > div:nth-child(2) {
+      justify-content: space-evenly;
+      input {
+        width: 70%;
+      }
+    }
+    & > div:nth-child(3) {
+      justify-content: center;
+      align-items: center;
       input {
         width: 20px;
+        margin: 0 0.5em;
       }
       & > div {
+        margin: 0 1em;
         padding: 0 10px;
         span {
           pointer-events: none;
         }
       }
     }
-    & > div:nth-child(3) {
+    & > div:nth-child(4) {
       justify-content: space-evenly;
       button {
         cursor: pointer;
@@ -189,9 +213,15 @@ export default function ExerItem({ exerData }: IExerItemProps) {
     dispatch(uptExer(result));
     setToggle(false);
   };
+
   return (
     <Ct>
       <InfoCt>
+        <div>
+          <h2>
+            {exerData.exerWeight == 0 ? "없음" : exerData.exerWeight + "kg"}
+          </h2>
+        </div>
         <div>
           <h1>{exerData.exerName}</h1>
         </div>
@@ -235,6 +265,9 @@ export default function ExerItem({ exerData }: IExerItemProps) {
       {toggle && (
         <UpdateCt>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <input {...register("exerWeight")} placeholder="운동 무게" />
+            </div>
             <div>
               <input {...register("exerName")} placeholder="운동 이름" />
             </div>

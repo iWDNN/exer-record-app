@@ -8,8 +8,9 @@ import Header from "./components/Header";
 
 const Container = styled.div`
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   margin: 0 auto;
+  display: flex;
 `;
 
 const Page = styled.div`

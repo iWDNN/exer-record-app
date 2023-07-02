@@ -5,4 +5,6 @@ export const theme: DefaultTheme = {
   yellow: "#FDBC2E",
   green: "#27C83F",
   blue: "#118ab2",
+  mainColor: "#2b2529",
+  subColor: "#3E393C",
 };

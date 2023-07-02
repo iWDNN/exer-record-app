@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { resetLog } from "../redux/exercise/exerLogsSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { EXER_LOGS } from "../type";
-import { formatTime } from "../utils";
 import SortIcon from "../components/common/SortIcon";
 
 interface IRecordTg {
@@ -12,17 +10,28 @@ interface IRecordTg {
 
 const ExerLogList = styled.section`
   width: 100%;
+  height:100%;
   display: flex;
   align-items: center;
   flex-direction: column;
-  & > button {
-    border: none;
-    border-radius: 7px;
-    padding: 0.75em 1em;
-    margin: 1em 0;
-    cursor: pointer;
-    &:active {
-      background-color: violet;
+  & > header {
+    width: 100%;
+    padding: 0 1em;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    & > button {
+      border: none;
+      border-radius: 7px;
+      background-color: ${(props) => props.theme.mainColor};
+      color: #fff;
+      padding: 0.75em 1em;
+      margin: 1em 0;
+      cursor: pointer;
+      transition: all 0.2s linear;
+      &:hover {
+        background-color: #000};
+      }
     }
   }
 `;
@@ -77,8 +86,8 @@ const ListHeader = styled.div`
 const ExerLogItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 0.5em 2em;
-  background-color: #2b2529;
+  padding: 1em 2em;
+  background-color: ${(props) => props.theme.mainColor};
   font-size: 0.9em;
   font-weight: 500;
   &:nth-child(2n) {
@@ -130,7 +139,13 @@ export default function ExerLogs() {
     exerCount: false,
   });
   const onClickReset = () => {
-    dispatch(resetLog());
+    if (window.confirm("정말로 운동기록을 초기화 하겠습니까?")) {
+      alert("삭제되었습니다");
+      dispatch(resetLog());
+      setRecords([]);
+    } else {
+      alert("취소되었습니다");
+    }
   };
 
   const onClickSort = (type: string) => {
@@ -155,7 +170,11 @@ export default function ExerLogs() {
   // 세트당 걸린 시간, 휴식 시간,
   return (
     <ExerLogList>
-      <button onClick={onClickReset}>초기화</button>
+      <header>
+        <button onClick={onClickReset}>
+          <i className="fa-solid fa-arrow-rotate-right" />
+        </button>
+      </header>
       <List>
         <ListHeader>
           <div
@@ -213,14 +232,13 @@ export default function ExerLogs() {
                   {record.performedSetCount}/{record.exerSetCount}
                 </div>
               </div>
-
               <IsCmp isCmp={record.cmp}>
                 <i className="fa-solid fa-circle"></i>
               </IsCmp>
             </ExerLogItem>
           ))
         ) : (
-          <>운동 기록이 없습니다</>
+          <h1>운동 기록이 없습니다</h1>
         )}
       </List>
     </ExerLogList>

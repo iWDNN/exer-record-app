@@ -9,24 +9,22 @@ import { addToggleSwitch } from "../redux/toggle/toggleSlice";
 
 interface IFormData {
   exerName: string;
-  maxCount: number;
+  exerWeight?: number;
+  exerCount: number;
   setCount: number;
   setRestTerm: number;
 }
 
 const AddSection = styled(motion.section)`
-  margin: 1em;
+  width: 100%;
+  margin: 1em 0;
   background-color: #2c262a;
   border-radius: 10px;
   form {
+    width: 100%;
     display: flex;
-
     align-items: center;
-    @media screen and (max-width: 1139px) {
-      flex-direction: column;
-    }
     button {
-      width: 270px;
       padding: 1em;
       border: none;
       border-top-right-radius: 10px;
@@ -39,8 +37,8 @@ const AddSection = styled(motion.section)`
   }
 `;
 const InputEl = styled.div`
-  width: 270px;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   input {
     border-right: 1px solid #4d484a;
@@ -77,12 +75,10 @@ export default function AddTap() {
       addExer({
         exerId: uuid(),
         exerName: formData.exerName,
-        exerCount:
-          Math.floor(formData.maxCount / 3) <= 2
-            ? 2
-            : Math.floor(formData.maxCount / 3),
+        exerCount: +formData.exerCount,
         exerSetCount: +formData.setCount,
         exerSetRestTerm: +formData.setRestTerm,
+        exerWeight: formData.exerWeight ? +formData.exerWeight : 0,
       })
     );
     dispatch(addToggleSwitch(false));
@@ -105,16 +101,28 @@ export default function AddTap() {
         </InputEl>
         <InputEl>
           <Input
-            {...register("maxCount", {
-              required: "가능한 최대 횟수를 입력해주세요",
+            {...register("exerWeight", {
               pattern: {
                 value: /[0-9]/g,
                 message: "숫자만 입력해주세요",
               },
             })}
-            placeholder="가능한 최대 횟수"
+            placeholder="무게를 입력해주세요(기본 단위:kg)(없을시 공란으로 기재)"
           />
-          <span>{errors.maxCount?.message}</span>
+          <span>{errors.exerName?.message}</span>
+        </InputEl>
+        <InputEl>
+          <Input
+            {...register("exerCount", {
+              required: "횟수를 입력해주세요",
+              pattern: {
+                value: /[0-9]/g,
+                message: "숫자만 입력해주세요",
+              },
+            })}
+            placeholder=" 횟수"
+          />
+          <span>{errors.exerCount?.message}</span>
         </InputEl>
         <InputEl>
           <Input
