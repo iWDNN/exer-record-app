@@ -19,6 +19,7 @@ const Ct = styled.li`
   flex-direction: column;
   box-sizing: border-box;
   border-bottom: 1px solid #4e494b;
+  background-color: ${(props) => props.theme.mainColor};
 `;
 
 const InfoCt = styled.div`

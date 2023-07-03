@@ -40,7 +40,7 @@ const List = styled.ul`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: ${(props) => props.theme.mainColor};
+
   /* @media screen and (max-width: 1439px) {
   } */
 `;
