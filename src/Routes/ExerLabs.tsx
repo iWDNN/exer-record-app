@@ -234,7 +234,7 @@ export default function ExerLabs() {
               <div>
                 <span>운동 총 소요시간</span>
                 <span>
-                  {allReduceTime[0]}h {allReduceTime[1]}m {allReduceTime[2]}s
+                  {allReduceTime[0]}m {allReduceTime[1]}s {allReduceTime[2]}ms
                 </span>
               </div>
               <div>

@@ -8,6 +8,6 @@ export const EXERCISE_STATE = {
   play: "운동중",
   pause: "일시정지",
   rest: "휴식중",
-  readyNextSet: "다음세트준비",
+  readyNextSet: "다음 세트 준비",
   cmp: "운동완료",
 };
