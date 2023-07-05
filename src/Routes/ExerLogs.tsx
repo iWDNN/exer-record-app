@@ -9,13 +9,15 @@ interface IRecordTg {
 }
 
 const ExerLogList = styled.section`
+  position: relative;
   width: 100%;
-  height:100%;
+  height: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
   & > header {
     width: 100%;
+    height: 10vh;
     padding: 0 1em;
     display: flex;
     justify-content: flex-end;
@@ -30,17 +32,24 @@ const ExerLogList = styled.section`
       cursor: pointer;
       transition: all 0.2s linear;
       &:hover {
-        background-color: #000};
+        background-color: #000;
       }
     }
   }
 `;
 const List = styled.div`
   width: 100%;
+  height: 90vh;
   display: flex;
   flex-direction: column;
+  overflow: scroll;
+  & > div:nth-child(2) {
+    margin-top: 38px;
+  }
 `;
 const ListHeader = styled.div`
+  position: absolute;
+  width: 100%;
   display: flex;
   align-items: center;
   text-align: center;
@@ -84,6 +93,8 @@ const ListHeader = styled.div`
   }
 `;
 const ExerLogItem = styled.div`
+  width: 100%;
+  height: 50px;
   display: flex;
   align-items: center;
   padding: 1em 2em;

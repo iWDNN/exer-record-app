@@ -14,7 +14,7 @@ interface IExerItemProps {
 }
 
 const Ct = styled.li`
-  height: 110px;
+  height: 125px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

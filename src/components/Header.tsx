@@ -5,6 +5,7 @@ import { addToggleSwitch } from "../redux/toggle/toggleSlice";
 import { useAppDispatch } from "../redux/hooks";
 
 const Ct = styled.div`
+  width: 6.5vw;
   display: flex;
   flex-direction: column;
   align-items: center;

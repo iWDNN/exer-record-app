@@ -74,17 +74,11 @@ const ControlCt = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    & > button {
-      width: 70px;
-      height: 70px;
-      font-size: 1.5em;
-      color: #fff;
-      border: none;
-      margin: 10px;
-      border-radius: 20px;
-      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-      background-color: ${(props) => props.theme.subColor};
-      cursor: pointer;
+  }
+  & > div:nth-child(1) {
+    button:nth-child(2) {
+      width: 90px;
+      height: 90px;
     }
   }
 `;
@@ -131,6 +125,19 @@ const RecordCt = styled.div`
   }
 `;
 
+const ControlButton = styled.button<{ color?: string }>`
+  width: 70px;
+  height: 70px;
+  color: ${(props) => (props.color ? props.color : "#fff")};
+  border: none;
+  margin: 10px;
+  border-radius: 30%;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+  background-color: ${(props) => props.theme.subColor};
+  cursor: pointer;
+  font-size: 1.5em;
+`;
+
 export default function PlayExer() {
   const dispatch = useAppDispatch();
 
@@ -152,7 +159,7 @@ export default function PlayExer() {
     else if (!initRun && isRunning && !isRest) return EXERCISE_STATE.play;
     else if (
       !initRun &&
-      !isRunning &&
+      // !isRunning &&
       isRest &&
       records.length < +exerInfo.exerSetCount
     )
@@ -180,6 +187,7 @@ export default function PlayExer() {
     )
       return EXERCISE_STATE.cmp;
   };
+
   const onClickPlay = () => {
     setIsRunning((prev) => !prev);
     setInitRun(false);
@@ -193,12 +201,16 @@ export default function PlayExer() {
     setRecords([]);
   };
   const onClickSetCmp = () => {
-    setIsRunning(false);
     setRecords((prev) => [...prev, time]);
-    if (records.length === exerInfo.exerSetCount - 1) {
-      setTime(1);
-    } else setTime(exerInfo.exerSetRestTerm * 100);
+    setTime(exerInfo.exerSetRestTerm * 100);
     setIsRest(true);
+    console.log("records", records.length, "setcount", exerInfo.exerSetCount);
+    if (records.length + 1 === exerInfo.exerSetCount) {
+      setTime(0);
+      setIsRest(false);
+      setIsRunning(false);
+      onClickSubmit();
+    }
   };
 
   const onClickSubmit = () => {
@@ -219,15 +231,8 @@ export default function PlayExer() {
         // 휴식끝나면 자동시작
         setIsRest(false);
         setIsRunning(true);
-      } else if (records.length === +exerInfo.exerSetCount) {
-        // 최종 완료
-        setTime(0);
-        setIsRest(false);
-        setIsRunning(false);
-        onClickSubmit();
-      }
-      if (isRunning) setTime(time + 1);
-      if (isRest) setTime(time - 1);
+      } else if (!isRest && isRunning) setTime(time + 1);
+      else if (isRest && isRunning) setTime(time - 1);
     },
     isRunning || isRest ? 10 : null
   );
@@ -254,28 +259,36 @@ export default function PlayExer() {
         <ControlCt>
           <div>
             {watchState() === EXERCISE_STATE.cmp ? (
-              <Link to={"/list"}>돌아가기</Link>
+              <ControlButton>
+                <Link to={"/list"}>돌아가기</Link>
+              </ControlButton>
             ) : (
               <>
-                <button onClick={onClickReset}>
+                <ControlButton onClick={onClickReset}>
                   <i className="fa-solid fa-arrow-rotate-right" />
-                </button>
-                <button onClick={onClickPlay}>
-                  {watchState() === EXERCISE_STATE.play ? (
+                </ControlButton>
+                <ControlButton onClick={onClickPlay}>
+                  {isRunning ? (
                     <i className="fa-solid fa-pause" />
-                  ) : watchState() === EXERCISE_STATE.pause ? (
+                  ) : !isRunning ? (
                     <i className="fa-solid fa-play" />
                   ) : (
                     <i className="fa-solid fa-play" />
                   )}
-                </button>
-                <button onClick={onClickSetCmp}>세트완료</button>
+                </ControlButton>
+                <ControlButton
+                  color={isRest || initRun ? "#121212" : "#fff"}
+                  disabled={isRest || initRun}
+                  onClick={onClickSetCmp}
+                >
+                  세트완료
+                </ControlButton>
               </>
             )}
           </div>
           <div>
             {watchState() !== EXERCISE_STATE.cmp && (
-              <button onClick={onClickSubmit}>그만하기</button>
+              <ControlButton onClick={onClickSubmit}>제출하기</ControlButton>
             )}
           </div>
         </ControlCt>
