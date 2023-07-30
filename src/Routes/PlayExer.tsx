@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import uuid from "react-uuid";
 import styled from "styled-components";
 import { addLog, IRecord } from "../redux/exercise/exerLogsSlice";
@@ -41,6 +41,7 @@ const TitleCt = styled.div`
   h1 {
     font-size: 3em;
     font-weight: 700;
+    padding: 0.5em;
   }
   h2 {
     font-size: 1.5em;
@@ -56,15 +57,52 @@ const TitleCt = styled.div`
     }
   }
 `;
-const TimerCt = styled.div`
+const TimerCt = styled.div<{ color?: string }>`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 5.5em;
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid
+      ${(props) => {
+        if (props.color === EXERCISE_STATE.play) {
+          return props.theme.red;
+        } else if (props.color === EXERCISE_STATE.pause) {
+          return props.theme.yellow;
+        } else if (props.color === EXERCISE_STATE.rest) {
+          return props.theme.blue;
+        } else return "transparent";
+      }};
+    color: ${(props) => {
+      if (props.color === EXERCISE_STATE.play) {
+        return props.theme.red;
+      } else if (props.color === EXERCISE_STATE.pause) {
+        return props.theme.yellow;
+      } else if (props.color === EXERCISE_STATE.rest) {
+        return props.theme.blue;
+      } else return "#fff";
+    }};
+    border-radius: 15px;
+    padding: 0.1em 0.2em;
+
+    span {
+      width: 110px;
+      text-align: center;
+    }
+  }
+`;
+const StateCt = styled.div`
+  margin-top: 15px;
   span {
-    width: 110px;
+    display: block;
     text-align: center;
+    font-size: 1.5em;
+    font-weight: 500;
+    padding: 0.5em;
   }
 `;
 const ControlCt = styled.div`
@@ -83,15 +121,6 @@ const ControlCt = styled.div`
   }
 `;
 
-const StateCt = styled.div`
-  span {
-    display: block;
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: 500;
-    padding: 0.5em;
-  }
-`;
 const StateDisplay = styled.div<{ color?: string }>`
   font-size: 1.4em;
   text-align: center;
@@ -139,6 +168,8 @@ const ControlButton = styled.button<{ color?: string }>`
 `;
 
 export default function PlayExer() {
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
 
   const { exerId } = useParams();
@@ -204,27 +235,34 @@ export default function PlayExer() {
     setRecords((prev) => [...prev, time]);
     setTime(exerInfo.exerSetRestTerm * 100);
     setIsRest(true);
-    console.log("records", records.length, "setcount", exerInfo.exerSetCount);
+    // console.log("records", records.length, "setcount", exerInfo.exerSetCount);
     if (records.length + 1 === exerInfo.exerSetCount) {
       setTime(0);
       setIsRest(false);
       setIsRunning(false);
-      onClickSubmit();
+      onSubmit();
     }
   };
 
   const onClickSubmit = () => {
+    onSubmit();
+    alert("제출했습니다");
+    navigate("/");
+  };
+
+  const onSubmit = () => {
     const performedSet = records.filter((record) => record !== 0).length;
     const result: IRecord = {
       recordId: uuid(),
       date: new Date().getTime(),
       recordList: records,
-      performedSetCount: performedSet,
-      cmp: performedSet >= +exerInfo.exerSetCount,
+      performedSetCount: performedSet + 1,
+      cmp: performedSet + 1 >= +exerInfo.exerSetCount,
       ...exerInfo,
     };
     dispatch(addLog(result));
   };
+
   useInterval(
     () => {
       if (isRest && time === 1 && records.length !== +exerInfo.exerSetCount) {
@@ -241,13 +279,18 @@ export default function PlayExer() {
       <section>
         <TitleCt>
           <div>
+            <h2>
+              {exerInfo.exerSetCount}세트 {exerInfo.exerCount}회씩
+            </h2>
             <h1>{exerInfo.exerName}</h1>
             {exerInfo.exerWeight !== 0 && <h2>{exerInfo.exerWeight}kg</h2>}
           </div>
         </TitleCt>
-        <TimerCt>
-          <span>{formattedTime[0]}</span>:<span>{formattedTime[1]}</span>.
-          <span>{formattedTime[2]}</span>
+        <TimerCt color={watchState()}>
+          <div>
+            <span>{formattedTime[0]}</span>:<span>{formattedTime[1]}</span>.
+            <span>{formattedTime[2]}</span>
+          </div>
         </TimerCt>
         <StateCt>
           <StateDisplay color={watchState()}>{watchState()}</StateDisplay>
@@ -260,7 +303,7 @@ export default function PlayExer() {
           <div>
             {watchState() === EXERCISE_STATE.cmp ? (
               <ControlButton>
-                <Link to={"/list"}>돌아가기</Link>
+                <Link to={"/"}>돌아가기</Link>
               </ControlButton>
             ) : (
               <>

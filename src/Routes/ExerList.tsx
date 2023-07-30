@@ -13,13 +13,15 @@ const Ct = styled.section`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 0 1em;
+  @media screen and (max-width: 1100px) {
+  }
   & > header {
     width: 100%;
     height: 100px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 1em;
     h1 {
       font-weight: 700;
       font-size: 1.5em;
@@ -33,10 +35,16 @@ const Ct = styled.section`
       background-color: ${(props) => props.theme.mainColor};
       color: #fff;
       font-size: 1.1em;
+      outline: none;
+      cursor: pointer;
+      &:hover {
+        color: #d4d4d4;
+      }
     }
   }
 `;
 const List = styled.ul`
+  padding: 0 1em;
   width: 100%;
   display: flex;
   flex-direction: column;

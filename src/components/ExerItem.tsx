@@ -29,6 +29,9 @@ const InfoCt = styled.div`
   grid-template-columns: 10% 20% 40% 30%;
   align-items: center;
   padding: 1em;
+  @media screen and (max-width: 1100px) {
+    grid-template-columns: 20% 40% 40%;
+  }
   div {
     place-self: center;
   }
@@ -59,6 +62,9 @@ const InfoCt = styled.div`
   }
 
   & > div:nth-child(3) {
+    @media screen and (max-width: 1100px) {
+      display: none;
+    }
     width: 100%;
     display: flex;
     justify-content: center;

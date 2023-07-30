@@ -5,7 +5,6 @@ import PlayExer from "./Routes/PlayExer";
 import ExerList from "./Routes/ExerList";
 import ExerLabs from "./Routes/ExerLabs";
 import LabDetail from "./Routes/LabDetail";
-import Home from "./Routes/Home";
 
 const router = createBrowserRouter([
   {
@@ -14,10 +13,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
-      },
-      {
-        path: "list",
         element: <ExerList />,
       },
       {

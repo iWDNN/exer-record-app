@@ -17,23 +17,24 @@ const ExerLogList = styled.section`
   flex-direction: column;
   & > header {
     width: 100%;
-    height: 10vh;
-    padding: 0 1em;
+    height: 100px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    & > button {
+    padding: 0 1em;
+    h1 {
+      font-weight: 700;
+      font-size: 1.5em;
+      letter-spacing: 1px;
+    }
+    button {
+      width: 40px;
+      height: 40px;
       border: none;
       border-radius: 7px;
       background-color: ${(props) => props.theme.mainColor};
       color: #fff;
-      padding: 0.75em 1em;
-      margin: 1em 0;
-      cursor: pointer;
-      transition: all 0.2s linear;
-      &:hover {
-        background-color: #000;
-      }
+      font-size: 1.1em;
     }
   }
 `;
@@ -96,6 +97,7 @@ const ExerLogItem = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 1em 2em;
   background-color: ${(props) => props.theme.mainColor};
@@ -176,12 +178,12 @@ export default function ExerLogs() {
       };
     });
   };
-
   // 운동 시작 시간, 종료 시간
   // 세트당 걸린 시간, 휴식 시간,
   return (
     <ExerLogList>
       <header>
+        <h1>운동 기록</h1>
         <button onClick={onClickReset}>
           <i className="fa-solid fa-arrow-rotate-right" />
         </button>
@@ -224,7 +226,7 @@ export default function ExerLogs() {
             <span>완료 여부</span>
           </div>
         </ListHeader>
-        {records ? (
+        {JSON.stringify(records) !== (JSON.stringify([]) as any) ? (
           records.map((record) => (
             <ExerLogItem key={record.recordId}>
               <div>
@@ -234,7 +236,11 @@ export default function ExerLogs() {
                 </span>
               </div>
               <div>
-                <span>{record.exerName}</span>
+                <span>
+                  {record.exerName}
+                  {record.exerWeight !== 0 &&
+                    " [ " + record.exerWeight + "KG ]"}
+                </span>
               </div>
               <div>
                 <div>{record.exerSetCount}</div>
@@ -249,7 +255,7 @@ export default function ExerLogs() {
             </ExerLogItem>
           ))
         ) : (
-          <h1>운동 기록이 없습니다</h1>
+          <ExerLogItem>운동 기록이 없습니다</ExerLogItem>
         )}
       </List>
     </ExerLogList>

@@ -5,7 +5,9 @@ import { addToggleSwitch } from "../redux/toggle/toggleSlice";
 import { useAppDispatch } from "../redux/hooks";
 
 const Ct = styled.div`
-  width: 6.5vw;
+  position: fixed;
+  width: 94px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -63,8 +65,8 @@ export default function Header() {
         <Link to="/">exer record</Link>
       </Logo>
       <ul>
-        <LinkEl isActive={pathname === "/list"}>
-          <Link to="/list">
+        <LinkEl isActive={pathname === "/"}>
+          <Link to="/">
             <i className="fa-solid fa-dumbbell" />
           </Link>
         </LinkEl>

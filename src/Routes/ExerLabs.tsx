@@ -11,25 +11,44 @@ import { formatTime } from "../utils";
 
 const Container = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: #2a2527;
+  & > header {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1em;
+    h1 {
+      font-weight: 700;
+      font-size: 1.5em;
+      letter-spacing: 1px;
+    }
+    button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 7px;
+      background-color: ${(props) => props.theme.mainColor};
+      color: #fff;
+      font-size: 1.1em;
+    }
+  }
   & > section {
     width: 100%;
+    display: flex;
+    align-items: center;
     margin: 1em 0;
     padding: 1em 0;
     opacity: 0.9;
     border-bottom: #eee;
-    h2 {
-      padding: 1em 0;
-    }
+    background-color: #2a2527;
   }
-  & > section:nth-child(1) {
-    display: flex;
+  & > section:nth-child(2) {
     justify-content: center;
-    align-items: center;
     & > div {
     }
     & > div:nth-child(1) {
@@ -43,6 +62,7 @@ const Container = styled.div`
       display: flex;
       flex-wrap: wrap;
       row-gap: 80px;
+      align-items: center;
       & > div {
         width: 250px;
         height: 50px;
@@ -67,18 +87,12 @@ const Container = styled.div`
       }
     }
   }
-  & > section:nth-child(2) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    & > h2 {
-      font-size: 1.5em;
-      font-weight: 700;
-    }
+  & > section:nth-child(4) {
+    padding: 1em;
     & > ul {
       display: flex;
       & > li {
-        margin: 0 10px;
+        margin: 0 1em;
       }
     }
   }
@@ -97,7 +111,7 @@ export default function ExerLabs() {
       ),
     [exerLogs]
   );
-  const perExerCountObj = useMemo(
+  const simpleExer = useMemo(
     () =>
       Array.from(deDupList).map((deDupExer) => {
         let count = exerLogs.filter(
@@ -111,19 +125,36 @@ export default function ExerLabs() {
     [exerLogs]
   );
 
-  const maxObj = perExerCountObj.reduce((prev, value) =>
-    prev.count >= value.count ? prev : value
-  );
-  const maxExerArr = perExerCountObj.filter(
-    (exer) => exer.count === maxObj.count && exer
-  );
+  const mostExer = useMemo(() => {
+    const nameList = exerLogs.map((exer) => exer.exerName); // ['a','b','a','c','d']
+    const result: any = {}; // {}
+    nameList.forEach((x) => {
+      // x 'a'
+      result[x] = (result[x] || 0) + 1;
+    });
+    let maxObj = {
+      key: "",
+      value: 0,
+    };
+    Object.entries(result).forEach(([key, value]: any) => {
+      if (value > maxObj.value) {
+        maxObj.key = key;
+        maxObj.value = value;
+      }
+    });
+    return maxObj;
+  }, [exerLogs]);
+
   const lastDate = useMemo(
     () => new Date(Array.from(exerLogs).at(-1)?.date!).toLocaleDateString(),
     [exerLogs]
   );
   return (
     <Container>
-      {exerLogs && (
+      <header>
+        <h1>운동 분석</h1>
+      </header>
+      {JSON.stringify(exerLogs) !== (JSON.stringify([]) as any) ? (
         <>
           <section>
             <div>
@@ -134,7 +165,7 @@ export default function ExerLabs() {
                 series={[
                   {
                     name: "",
-                    data: perExerCountObj.map((obj) => obj.count),
+                    data: simpleExer.map((obj) => obj.count),
                   },
                 ]}
                 options={{
@@ -161,7 +192,7 @@ export default function ExerLabs() {
                     },
                   },
                   xaxis: {
-                    categories: perExerCountObj.map((obj) => obj.name),
+                    categories: simpleExer.map((obj) => obj.name),
                     position: "top",
                     axisBorder: {
                       show: false,
@@ -192,6 +223,12 @@ export default function ExerLabs() {
                     },
                   },
                   yaxis: {
+                    tickAmount: 1,
+                    min: 0,
+                    max:
+                      Math.ceil(
+                        Math.max(...simpleExer.map((exer) => exer.count)) * 0.1
+                      ) * 10,
                     axisBorder: {
                       show: false,
                     },
@@ -213,13 +250,8 @@ export default function ExerLabs() {
             <div>
               <div>
                 <span>가장 많이 한 운동</span>
-                <span>
-                  {maxExerArr.map((exer) => (
-                    <span key={uuid()}>{exer.name}</span>
-                  ))}
-                </span>
+                <span>{mostExer.key}</span>
               </div>
-
               <div>
                 <span>운동 세트 완수율</span>
                 <span>
@@ -243,8 +275,10 @@ export default function ExerLabs() {
               </div>
             </div>
           </section>
+          <header>
+            <h1>운동 별 분석</h1>
+          </header>
           <section>
-            <h2>운동 종목 별 분석</h2>
             <ul>
               {exerLogs &&
                 deDupList.map((exer) => (
@@ -257,6 +291,10 @@ export default function ExerLabs() {
             </ul>
           </section>
         </>
+      ) : (
+        <section>
+          <h1>운동 기록이 없습니다</h1>
+        </section>
       )}
     </Container>
   );

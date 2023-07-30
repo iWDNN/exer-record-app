@@ -5,7 +5,7 @@ export interface IExerciseState {
   exerName: string;
   exerCount: number;
   exerSetCount: number;
-  exerWeight?: number;
+  exerWeight: number;
   exerSetRestTerm: number;
 }
 
